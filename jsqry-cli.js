@@ -99,8 +99,6 @@ function parseArgs() {
   return [params, args];
 }
 
-const inputStr = getstdin();
-
 const [params, args] = parseArgs();
 
 if (params["-v"] || params["--version"]) {
@@ -112,6 +110,7 @@ Usage: echo $JSON | jsqry 'query'
  -h,--help      print help and exit
  -v,--version   print version and exit`);
 } else {
+  const inputStr = getstdin();
   const errMsg = doWork(
     inputStr,
     args[0] || "",
