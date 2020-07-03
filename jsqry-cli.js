@@ -1,17 +1,18 @@
 import * as std from "std";
 
-var utf8ArrayToStr = (function () {
-    var charCache = new Array(128); // Preallocate the cache for the common single byte chars
-    var charFromCodePt = String.fromCodePoint || String.fromCharCode;
-    var result = [];
+// based on code from https://github.com/twardoch/svgop/blob/master/src/app/svgop-qjs.js
+const utf8ArrayToStr = (function () {
+    const charCache = new Array(128); // Preallocate the cache for the common single byte chars
+    const charFromCodePt = String.fromCodePoint || String.fromCharCode;
+    const result = [];
 
     return function (array) {
-        var codePt, byte1;
-        var buffLen = array.length;
+        let codePt, byte1;
+        const buffLen = array.length;
 
         result.length = 0;
 
-        for (var i = 0; i < buffLen;) {
+        for (let i = 0; i < buffLen;) {
             byte1 = array[i++];
 
             if (byte1 <= 0x7f) {
@@ -48,7 +49,7 @@ function getstdin() {
     const result = [];
     let length = 0;
     let chunk;
-    while (std.in.eof() != true) {
+    while (!std.in.eof()) {
         chunk = std.in.getByte();
         if (chunk > 0) {
             result.push(chunk);
