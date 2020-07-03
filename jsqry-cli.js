@@ -83,6 +83,24 @@ function doWork(jsonStr, queryStr, useFirst) {
   return true;
 }
 
+function parseArgs() {
+  const params = {};
+  const args = [];
+
+  for (let i = 1; i < scriptArgs.length; i++) {
+    const arg = scriptArgs[i];
+    if (arg.indexOf("-") === 0) {
+      params[arg] = true;
+    } else {
+      args.push(arg);
+    }
+  }
+
+  return [params, args];
+}
+
 const inputStr = getstdin();
 
-doWork(inputStr, scriptArgs[1], false);
+const [params, args] = parseArgs();
+
+doWork(inputStr, args[0] || "", params["-1"]);
