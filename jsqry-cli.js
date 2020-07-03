@@ -107,6 +107,12 @@ const [params, args] = parseArgs();
 
 if (params["-v"] || params["--version"]) {
   print(VERSION);
+} else if (params["-h"] || params["--help"]) {
+  print(`jsqry ver. ${VERSION}
+Usage: echo $JSON | jsqry 'query'
+ -1,--first     return first result element
+ -h,--help      print help and exit
+ -v,--version   print version and exit`);
 } else {
   doWork(inputStr, args[0] || "", params["-1"] || params["--first"]);
 }
