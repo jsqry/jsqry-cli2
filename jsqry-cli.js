@@ -114,5 +114,7 @@ Usage: echo $JSON | jsqry 'query'
  -h,--help      print help and exit
  -v,--version   print version and exit`);
 } else {
-  doWork(inputStr, args[0] || "", params["-1"] || params["--first"]);
+  if (!doWork(inputStr, args[0] || "", params["-1"] || params["--first"])) {
+    std.exit(1);
+  }
 }
