@@ -1,6 +1,8 @@
 import * as std from "std";
 import jsqry from "./jsqry.js";
 
+const VERSION = "0.0.2";
+
 // based on code from https://github.com/twardoch/svgop/blob/master/src/app/svgop-qjs.js
 const utf8ArrayToStr = (function () {
   const charCache = new Array(128); // Preallocate the cache for the common single byte chars
@@ -103,4 +105,8 @@ const inputStr = getstdin();
 
 const [params, args] = parseArgs();
 
-doWork(inputStr, args[0] || "", params["-1"]);
+if (params["-v"] || params["--version"]) {
+  print(VERSION);
+} else {
+  doWork(inputStr, args[0] || "", params["-1"] || params["--first"]);
+}
