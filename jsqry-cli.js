@@ -85,4 +85,4 @@ function doWork(jsonStr, queryStr, useFirst) {
 
 const inputStr = getstdin();
 
-doWork(inputStr, "a", false);
+doWork(inputStr, scriptArgs[1], false);
