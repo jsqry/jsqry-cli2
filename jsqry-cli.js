@@ -71,18 +71,16 @@ function doWork(jsonStr, queryStr, useFirst) {
   try {
     json = JSON.parse(jsonStr);
   } catch (e) {
-    err("error: Wrong JSON");
-    return false;
+    return "error: Wrong JSON";
   }
   let res;
   try {
     res = (useFirst ? jsqry.first : jsqry.query)(json, queryStr);
   } catch (e) {
-    err("error: " + e);
-    return false;
+    return "error: " + e;
   }
   print(JSON.stringify(res, null, 2));
-  return true;
+  return null;
 }
 
 function parseArgs() {
@@ -114,7 +112,13 @@ Usage: echo $JSON | jsqry 'query'
  -h,--help      print help and exit
  -v,--version   print version and exit`);
 } else {
-  if (!doWork(inputStr, args[0] || "", params["-1"] || params["--first"])) {
+  const errMsg = doWork(
+    inputStr,
+    args[0] || "",
+    params["-1"] || params["--first"]
+  );
+  if (errMsg) {
+    err(errMsg);
     std.exit(1);
   }
 }
