@@ -1,4 +1,5 @@
 import * as std from "std";
+import jsqry from "./jsqry.js";
 
 // based on code from https://github.com/twardoch/svgop/blob/master/src/app/svgop-qjs.js
 const utf8ArrayToStr = (function () {
@@ -59,4 +60,25 @@ function getstdin() {
     return utf8ArrayToStr(result);
 }
 
-console.log(getstdin())
+function doWork(jsonStr, queryStr, useFirst) {
+    let json;
+    try {
+        json = JSON.parse(jsonStr);
+    } catch (e) {
+        print('error: Wrong JSON'); // TODO stderr
+        return false;
+    }
+    let res;
+    try {
+        res = (useFirst ? jsqry.first : jsqry.query)(json, queryStr);
+    } catch (e) {
+        print('error: ' + e); // TODO stderr
+        return false;
+    }
+    print(JSON.stringify(res, null, 2));
+    return true;
+}
+
+const inputStr = getstdin();
+
+doWork(inputStr, 'a', false)
