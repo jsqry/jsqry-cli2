@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "jsqry": "1.2.2"
+  },
+  "devDependencies": {
+    "prettier": "2.0.5"
   }
 }
