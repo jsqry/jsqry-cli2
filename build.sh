@@ -16,12 +16,14 @@ cd ./build/
 #    -fno-regexp \
 #    -fno-eval \
 
+# TODO: adding this setting causes https://github.com/jsqry/jsqry-cli2/issues/1
+#     -fno-bigint \
+
 $QJS_HOME/qjsc \
     -flto \
     -fno-date \
     -fno-proxy \
     -fno-promise \
-    -fno-bigint \
     -fno-map \
     -fno-typedarray \
     -fno-string-normalize \
