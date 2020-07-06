@@ -3,5 +3,6 @@
 .idea/
 target/
 build/
+temp/
 node_modules/
 *.iml
