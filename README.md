@@ -1,31 +1,68 @@
 # jsqry-cli2
 
-`jsqry` is a small command line tool to query JSON using [sane DSL](https://jsqry.github.io/) (similar to [jq](https://github.com/stedolan/jq)).
+`jsqry` is a small command line tool (similar to [jq](https://github.com/stedolan/jq)) to query JSON using [sane DSL](https://jsqry.github.io/).
 
 The purpose of this app is to expose the functionality of [jsqry](https://github.com/jsqry/jsqry) JS library in form of CLI.
 
 Unlike [jsqry-cli](https://github.com/jsqry/jsqry-cli) this one is based on [QuickJS](https://bellard.org/quickjs/) by [Fabrice Bellard](https://bellard.org/).
 
-```bash
-$ echo '[{"a":1},{"a":2}]' | jsqry 'a' # query
+## Examples
+
+#### query
+```
+$ echo '[{"name":"John","age":30},{"name":"Alice","age":25},{"name":"Bob","age":50}]' | jsqry 'name'
 [
-  1,
-  2
+  "John",
+  "Alice",
+  "Bob"
 ]
+```
 
-$ echo '[{"a":1},{"a":2}]' | jsqry -1 'a' # first
-1
+#### first element
 
-$ echo '[{"a":1},{"a":2}]' | jsqry # use as simple JSON pretty-printer
+```
+$ echo '[{"name":"John","age":30},{"name":"Alice","age":25},{"name":"Bob","age":50}]' | jsqry -1 'name'
+"John"
+```
+
+#### use as simple JSON pretty-printer
+
+```
+$ echo '[{"name":"John","age":30},{"name":"Alice","age":25},{"name":"Bob","age":50}]' | jsqry
 [
   {
-    "a": 1
+    "name": "John",
+    "age": 30
   },
   {
-    "a": 2
+    "name": "Alice",
+    "age": 25
+  },
+  {
+    "name": "Bob",
+    "age": 50
   }
 ]
+```
 
+#### something trickier
+
+Filter greater than 2, map adding 100, sort descending, take last 2 element. 
+By combining these features you can build arbitrary complex queries. [Find more](https://jsqry.github.io/).
+
+```
+$ echo '[1,2,3,4,5]' | jsqry '[_>2] {_+100} s(-_) [-2:]'
+[
+  104,
+  103
+]
+```
+
+The output is pretty-printed by default.
+
+#### help message
+
+```
 $ jsqry
 jsqry ver. 0.0.2
 Usage: echo $JSON | jsqry 'query'
@@ -33,8 +70,6 @@ Usage: echo $JSON | jsqry 'query'
  -h,--help      print help and exit
  -v,--version   print version and exit
 ```
-
-The output is pretty-printed by default.
 
 ## Compare to jq
 
