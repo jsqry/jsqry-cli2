@@ -1,6 +1,6 @@
 # jsqry-cli2
 
-Command-line jsqry (like jq).
+`jsqry` is a small command line tool to query JSON using [sane DSL](https://jsqry.github.io/) (similar to [jq](https://github.com/stedolan/jq)).
 
 The purpose of this app is to expose the functionality of [jsqry](https://github.com/jsqry/jsqry) JS library in form of CLI.
 
@@ -15,9 +15,30 @@ $ echo '[{"a":1},{"a":2}]' | jsqry 'a' # query
 
 $ echo '[{"a":1},{"a":2}]' | jsqry -1 'a' # first
 1
+
+$ echo '[{"a":1},{"a":2}]' | jsqry # use as simple JSON pretty-printer
+[
+  {
+    "a": 1
+  },
+  {
+    "a": 2
+  }
+]
+
+$ jsqry
+jsqry ver. 0.0.2
+Usage: echo $JSON | jsqry 'query'
+ -1,--first     return first result element
+ -h,--help      print help and exit
+ -v,--version   print version and exit
 ```
 
 The output is pretty-printed by default.
+
+## Compare to jq
+
+https://gist.github.com/xonixx/d6066e83ec0773df248141440b18e8e4
 
 ## Install
 
