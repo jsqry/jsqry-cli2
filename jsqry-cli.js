@@ -1,4 +1,5 @@
 import * as std from "std";
+import * as os from "os";
 import jsqry from "./jsqry.js";
 
 const VERSION = "0.0.2";
@@ -103,7 +104,11 @@ const [params, args] = parseArgs();
 
 if (params["-v"] || params["--version"]) {
   print(VERSION);
-} else if (params["-h"] || params["--help"]) {
+} else if (
+  params["-h"] ||
+  params["--help"] ||
+  (os.isatty(std.in) && scriptArgs.length === 1) /* called with no params */
+) {
   print(`jsqry ver. ${VERSION}
 Usage: echo $JSON | jsqry 'query'
  -1,--first     return first result element
