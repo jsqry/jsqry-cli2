@@ -10,7 +10,9 @@ Unlike [jsqry-cli](https://github.com/jsqry/jsqry-cli) this one is based on [Qui
 
 #### query
 ```
-$ echo '[{"name":"John","age":30},{"name":"Alice","age":25},{"name":"Bob","age":50}]' | jsqry 'name'
+$ echo '[{"name":"John","age":30},
+         {"name":"Alice","age":25},
+         {"name":"Bob","age":50}]' | jsqry 'name'
 [
   "John",
   "Alice",
@@ -21,7 +23,9 @@ $ echo '[{"name":"John","age":30},{"name":"Alice","age":25},{"name":"Bob","age":
 #### first element
 
 ```
-$ echo '[{"name":"John","age":30},{"name":"Alice","age":25},{"name":"Bob","age":50}]' | jsqry -1 'name'
+$ echo '[{"name":"John","age":30},
+         {"name":"Alice","age":25},
+         {"name":"Bob","age":50}]' | jsqry -1 'name'
 "John"
 ```
 
@@ -47,7 +51,7 @@ $ echo '[{"name":"John","age":30},{"name":"Alice","age":25},{"name":"Bob","age":
 
 #### something trickier
 
-Filter greater than 2, map adding 100, sort descending, take last 2 element. 
+Filter greater than 2, map adding 100, sort descending, take last 2 elements. 
 By combining these features you can build arbitrary complex queries. [Find more](https://jsqry.github.io/).
 
 ```
