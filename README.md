@@ -1,6 +1,6 @@
 # jsqry-cli2
 
-`jsqry` is a small command line tool (similar to [jq](https://github.com/stedolan/jq)) to query JSON using [sane DSL](https://jsqry.github.io/).
+`jsqry` is a small command line tool (similar to [jq](https://github.com/stedolan/jq)) to query JSON using sane DSL.
 
 The purpose of this app is to expose the functionality of [jsqry](https://github.com/jsqry/jsqry) JS library in form of CLI.
 
@@ -52,7 +52,7 @@ $ echo '[{"name":"John","age":30},{"name":"Alice","age":25},{"name":"Bob","age":
 #### something trickier
 
 Filter greater than 2, map adding 100, sort descending, take last 2 elements. 
-By combining these features you can build arbitrary complex queries. [Find more](https://jsqry.github.io/).
+By combining these features you can build arbitrary complex queries. [Find more on supported DSL](https://jsqry.github.io/).
 
 ```
 $ echo '[1,2,3,4,5]' | jsqry '[_>2] {_+100} s(-_) [-2:]'
@@ -63,6 +63,21 @@ $ echo '[1,2,3,4,5]' | jsqry '[_>2] {_+100} s(-_) [-2:]'
 ```
 
 The output is pretty-printed by default.
+
+#### full JS power
+
+Since `jsqry` bundles the full-fledged [JS engine](https://bellard.org/quickjs/) in under 1 MB executable, the full power of JS is in your hands!
+
+```
+$ echo '["HTTP://EXAMPLE.COM/123", 
+         "https://www.Google.com/search?q=test", 
+         "https://www.YouTube.com/watch?v=_OBlgSz8sSM"]' | jsqry '{ _.match(/:\/\/([^\/]+)\//)[1].toLowerCase() }'
+[
+  "example.com",
+  "www.google.com",
+  "www.youtube.com"
+]
+```  
 
 #### help message
 
