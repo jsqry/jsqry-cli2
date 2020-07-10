@@ -1,3 +1,12 @@
+$ jsqry -v
+| 0.0.2
+
+$ jsqry -h
+| jsqry ver. 0.0.2
+| Usage: echo $JSON | jsqry 'query'
+|  -1,--first     return first result element
+|  -h,--help      print help and exit
+|  -v,--version   print version and exit
 
 $ echo '[{"a":1},{"a":2}]' | jsqry 'a'
 | [
@@ -54,12 +63,44 @@ $ echo '{}' | jsqry '}'
 @ error: } without {
 ? 1
 
-$ jsqry -v
-| 0.0.2
+=== Tests for the documentation examples ===
 
-$ jsqry -h
-| jsqry ver. 0.0.2
-| Usage: echo $JSON | jsqry 'query'
-|  -1,--first     return first result element
-|  -h,--help      print help and exit
-|  -v,--version   print version and exit
+$ printf '[{"name":"John","age":30},\n\t{"name":"Alice","age":25},\n\t{"name":"Bob","age":50}]' | jsqry 'name'
+| [
+|   "John",
+|   "Alice",
+|   "Bob"
+| ]
+
+$ printf '[{"name":"John","age":30},\n\t{"name":"Alice","age":25},\n\t{"name":"Bob","age":50}]' | jsqry -1 'name'
+| "John"
+
+$ echo '[{"name":"John","age":30},{"name":"Alice","age":25},{"name":"Bob","age":50}]' | jsqry
+| [
+|   {
+|     "name": "John",
+|     "age": 30
+|   },
+|   {
+|     "name": "Alice",
+|     "age": 25
+|   },
+|   {
+|     "name": "Bob",
+|     "age": 50
+|   }
+| ]
+
+$ echo '[1,2,3,4,5]' | jsqry '[_>2] {_+100} s(-_) [-2:]'
+| [
+|   104,
+|   103
+| ]
+
+$ printf '["HTTP://EXAMPLE.COM/123",\n\t"https://www.Google.com/search?q=test",\n\t"https://www.YouTube.com/watch?v=_OBlgSz8sSM"]' | jsqry '{ _.match(/:\/\/([^\/]+)\//)[1].toLowerCase() }'
+| [
+|   "example.com",
+|   "www.google.com",
+|   "www.youtube.com"
+| ]
+
