@@ -1,6 +1,7 @@
 import * as std from "std";
 import * as os from "os";
 import jsqry from "./jsqry.js";
+import colorJson from "./colorJson.js";
 
 const VERSION = "0.0.2";
 
@@ -80,7 +81,8 @@ function doWork(jsonStr, queryStr, useFirst) {
   } catch (e) {
     return "error: " + e;
   }
-  print(JSON.stringify(res, null, 2));
+  // print(JSON.stringify(res, null, 2));
+  print(colorJson(res, 2));
   return null;
 }
 
