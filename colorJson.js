@@ -1,11 +1,13 @@
 // based on https://github.com/zvakanaka/color-json
 
+// https://stackoverflow.com/a/28938235/104522
 const colors = {
-  separator: "\x1b[1;37m",
-  string: "\x1b[0;32m",
-  number: "\x1b[0;37m",
-  boolean: "\x1b[0;37m",
-  null: "\x1b[1;30m",
+  // separator: "\x1b[1;37m",
+  separator: "\x1b[1m",
+  string: "\x1b[0;92m",
+  number: "\x1b[0m",
+  boolean: "\x1b[1;37m",
+  null: "\x1b[1;31m",
   key: "\x1b[34;1m",
 };
 
@@ -23,7 +25,7 @@ export default function (jsonObj, spacing = 2) {
         } else if (/true|false/.test(match)) colorCode = "boolean";
         else if (/null/.test(match)) colorCode = "null";
         const color = colors[colorCode] || "";
-        return `${color}${match}${colors.separator}`;
+        return `${color}${match}\x1b[0m${colors.separator}`;
       }
     ) +
     "\x1b[0m"
