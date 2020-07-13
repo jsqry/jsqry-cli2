@@ -68,6 +68,9 @@ function err(msg) {
   std.err.puts("\n");
 }
 
+const isTtyIn = os.isatty(0);
+const isTtyOut = os.isatty(1);
+
 function doWork(jsonStr, queryStr, useFirst) {
   let json;
   try {
@@ -81,8 +84,7 @@ function doWork(jsonStr, queryStr, useFirst) {
   } catch (e) {
     return "error: " + e;
   }
-  // print(JSON.stringify(res, null, 2));
-  print(colorJson(res, 2));
+  print(isTtyOut ? colorJson(res, 2) : JSON.stringify(res, null, 2));
   return null;
 }
 
@@ -109,7 +111,7 @@ if (params["-v"] || params["--version"]) {
 } else if (
   params["-h"] ||
   params["--help"] ||
-  (os.isatty(std.in) && scriptArgs.length === 1) /* called with no params */
+  (isTtyIn && scriptArgs.length === 1) /* called with no params */
 ) {
   print(`jsqry ver. ${VERSION}
 Usage: echo $JSON | jsqry 'query'
