@@ -8,6 +8,7 @@ $ jsqry -h
 |  -h,--help      print help and exit
 |  -v,--version   print version and exit
 |  -c,--compact   compact output (no pretty-print)
+|  -u,--unquote   unquote output string(s)
 |  -as ARG,
 |  --arg-str ARG  supply string query argument
 |  -a ARG,
@@ -150,4 +151,42 @@ $ echo [2,1,3] | jsqry '{ ?[_] }' --arg '{"1":"one", "2":"two", "3": "three"}'
 |   "two",
 |   "one",
 |   "three"
+| ]
+
+=== unquoted output ===
+
+$ echo '[{"name":"Bob"}, {"name": "Alice"}]' | jsqry 'name' --unquote
+| Bob
+| Alice
+
+$ echo '[{"name":"Bob"}, {"name": "Alice"}]' | jsqry 'name' -1 -u
+| Bob
+
+$ echo '[{"name":"Bob"}, {"name": "Alice"}, {"name": {"value":"John"}}]' | jsqry 'name' -u
+| Bob
+| Alice
+| {"value":"John"}
+
+$ echo '[]' | jsqry -u # no output
+
+$ echo '[]' | jsqry -u | wc -l
+| 0
+
+$ echo '[""]' | jsqry -u
+| 
+|
+
+$ echo '[""]' | jsqry -u | wc -l
+| 1
+
+$ echo '[null,"null","\"test quotes"]' | jsqry -u
+| null
+| null
+| "test quotes
+
+$ echo '{"json":"{ \"a\": \"b\" }"}' | jsqry 'json' -u | jsqry
+| [
+|   {
+|     "a": "b"
+|   }
 | ]
