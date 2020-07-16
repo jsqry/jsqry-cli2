@@ -32,9 +32,8 @@ $ echo '[{"name":"John","age":30},
 #### use query parametrization
 
 ```
-$ echo '[{"name":"John","age":30},
-         {"name":"Alice","age":25},
-         {"name":"Bob","age":50}]' | jsqry '[ _.age>=? && _.name.toLowerCase().startsWith(?) ]' --arg 30 --arg-str joh 
+$ echo '[{"name":"John","age":30},{"name":"Alice","age":25},{"name":"Bob","age":50}]' \
+    | jsqry '[ _.age>=? && _.name.toLowerCase().startsWith(?) ]' --arg 30 --arg-str joh 
 [
   {
     "name": "John",
