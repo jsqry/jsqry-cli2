@@ -71,7 +71,21 @@ function err(msg) {
 const isTtyIn = os.isatty(0);
 const isTtyOut = os.isatty(1);
 
-function doWork(jsonStr, queryStr, queryArgs, useFirst, compact) {
+function unquoteResult(res) {
+  function isPrimitive(val) {
+    const type = typeof val;
+    return type === "string" || type === "boolean" || type === "number";
+  }
+  if (isPrimitive(res)) {
+    return res;
+  } else if (Array.isArray(res)) {
+    return res.map((e) => (isPrimitive(e) ? e : JSON.stringify(e))).join("\n");
+  } else {
+    return JSON.stringify(res);
+  }
+}
+
+function doWork(jsonStr, queryStr, queryArgs, useFirst, compact, unquote) {
   let json;
   try {
     json = JSON.parse(jsonStr);
@@ -85,7 +99,9 @@ function doWork(jsonStr, queryStr, queryArgs, useFirst, compact) {
     return "error: " + e;
   }
   print(
-    compact
+    unquote
+      ? unquoteResult(res)
+      : compact
       ? JSON.stringify(res)
       : isTtyOut
       ? colorJson(res, 2)
@@ -151,6 +167,7 @@ Usage: echo $JSON | jsqry 'query'
  -h,--help      print help and exit
  -v,--version   print version and exit
  -c,--compact   compact output (no pretty-print)
+ -u,--unquote   unquote output string(s)
  -as ARG,
  --arg-str ARG  supply string query argument
  -a ARG,
@@ -162,7 +179,8 @@ Usage: echo $JSON | jsqry 'query'
     args[0] || "",
     queryArgsParsed,
     params["-1"] || params["--first"],
-    params["-c"] || params["--compact"]
+    params["-c"] || params["--compact"],
+    params["-u"] || params["--unquote"]
   );
   if (errMsg) {
     err(errMsg);
