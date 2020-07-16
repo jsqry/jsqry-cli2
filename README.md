@@ -88,6 +88,10 @@ Usage: echo $JSON | jsqry 'query'
  -1,--first     return first result element
  -h,--help      print help and exit
  -v,--version   print version and exit
+ -as ARG,
+ --arg-str ARG  supply string query argument
+ -a ARG,
+ --arg ARG      supply query argument of any other type
 ```
 
 ## Compare to jq
