@@ -62,6 +62,8 @@ $ echo '[{"name":"John","age":30},{"name":"Alice","age":25},{"name":"Bob","age":
 ]
 ```
 
+The output is pretty-printed by default.
+
 #### something trickier
 
 Filter greater than 2, map adding 100, sort descending, take last 2 elements. 
@@ -74,8 +76,6 @@ $ echo '[1,2,3,4,5]' | jsqry '[_>2] {_+100} s(-_) [-2:]'
   103
 ]
 ```
-
-The output is pretty-printed by default.
 
 #### full JS power
 
