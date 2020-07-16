@@ -71,7 +71,7 @@ function err(msg) {
 const isTtyIn = os.isatty(0);
 const isTtyOut = os.isatty(1);
 
-function doWork(jsonStr, queryStr, useFirst) {
+function doWork(jsonStr, queryStr, queryArgs, useFirst) {
   let json;
   try {
     json = JSON.parse(jsonStr);
@@ -80,7 +80,7 @@ function doWork(jsonStr, queryStr, useFirst) {
   }
   let res;
   try {
-    res = (useFirst ? jsqry.first : jsqry.query)(json, queryStr);
+    res = (useFirst ? jsqry.first : jsqry.query)(json, queryStr, ...queryArgs);
   } catch (e) {
     return "error: " + e;
   }
@@ -88,23 +88,40 @@ function doWork(jsonStr, queryStr, useFirst) {
   return null;
 }
 
+const QUERY_ARG_STR = "-as";
+const QUERY_ARG_OTHER = "-a";
+
 function parseArgs() {
+  const valueSwitches = { [QUERY_ARG_STR]: 1, [QUERY_ARG_OTHER]: 1 };
   const params = {};
   const args = [];
+  const queryArgs = [];
+  let prevArg = null;
 
   for (let i = 1; i < scriptArgs.length; i++) {
     const arg = scriptArgs[i];
     if (arg.indexOf("-") === 0) {
-      params[arg] = true;
+      if (!valueSwitches[arg]) {
+        params[arg] = true;
+      }
     } else {
-      args.push(arg);
+      if (valueSwitches[prevArg]) {
+        queryArgs.push([prevArg, arg]);
+      } else {
+        args.push(arg);
+      }
     }
+    prevArg = arg;
   }
 
-  return [params, args];
+  return [params, args, queryArgs];
 }
 
-const [params, args] = parseArgs();
+const [params, args, queryArgs] = parseArgs();
+
+const queryArgsParsed = queryArgs.map(([switch_, arg]) =>
+  QUERY_ARG_STR === switch_ ? arg : JSON.parse(arg)
+);
 
 if (params["-v"] || params["--version"]) {
   print(VERSION);
@@ -123,6 +140,7 @@ Usage: echo $JSON | jsqry 'query'
   const errMsg = doWork(
     inputStr,
     args[0] || "",
+    queryArgsParsed,
     params["-1"] || params["--first"]
   );
   if (errMsg) {
