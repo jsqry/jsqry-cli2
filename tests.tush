@@ -7,6 +7,10 @@ $ jsqry -h
 |  -1,--first     return first result element
 |  -h,--help      print help and exit
 |  -v,--version   print version and exit
+|  -as ARG,
+|  --arg-str ARG  supply string query argument
+|  -a ARG,
+|  --arg ARG      supply query argument of any other type
 
 $ echo '[{"a":1},{"a":2}]' | jsqry 'a'
 | [
