@@ -98,15 +98,20 @@ function doWork(jsonStr, queryStr, queryArgs, useFirst, compact, unquote) {
   } catch (e) {
     return "error: " + e;
   }
-  print(
-    unquote
-      ? unquoteResult(res)
-      : compact
-      ? JSON.stringify(res)
-      : isTtyOut
-      ? colorJson(res, 2)
-      : JSON.stringify(res, null, 2)
-  );
+  if (unquote) {
+    const ur = unquoteResult(res);
+    if (ur !== "") {
+      print(ur);
+    }
+  } else {
+    print(
+      compact
+        ? JSON.stringify(res)
+        : isTtyOut
+        ? colorJson(res, 2)
+        : JSON.stringify(res, null, 2)
+    );
+  }
   return null;
 }
 
