@@ -89,10 +89,17 @@ function doWork(jsonStr, queryStr, queryArgs, useFirst) {
 }
 
 const QUERY_ARG_STR = "-as";
+const QUERY_ARG_STR1 = "--arg-str";
 const QUERY_ARG_OTHER = "-a";
+const QUERY_ARG_OTHER1 = "--arg";
 
 function parseArgs() {
-  const valueSwitches = { [QUERY_ARG_STR]: 1, [QUERY_ARG_OTHER]: 1 };
+  const valueSwitches = {
+    [QUERY_ARG_STR]: 1,
+    [QUERY_ARG_STR1]: 1,
+    [QUERY_ARG_OTHER]: 1,
+    [QUERY_ARG_OTHER1]: 1,
+  };
   const params = {};
   const args = [];
   const queryArgs = [];
@@ -120,7 +127,9 @@ function parseArgs() {
 const [params, args, queryArgs] = parseArgs();
 
 const queryArgsParsed = queryArgs.map(([switch_, arg]) =>
-  QUERY_ARG_STR === switch_ ? arg : JSON.parse(arg)
+  QUERY_ARG_STR === switch_ || QUERY_ARG_STR1 === switch_
+    ? arg
+    : JSON.parse(arg)
 );
 
 if (params["-v"] || params["--version"]) {

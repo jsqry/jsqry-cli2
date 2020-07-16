@@ -110,12 +110,12 @@ $ printf '["HTTP://EXAMPLE.COM/123",\n\t"https://www.Google.com/search?q=test",\
 
 === Test arguments ===
 
-$ echo '[{"name": "Bob", "age": 30}, {"name": "Alice", "age": 25}]' | jsqry '[_.name==?].age' -as Alice
+$ echo '[{"name": "Bob", "age": 30}, {"name": "Alice", "age": 25}]' | jsqry '[_.name==?].age' --arg-str Alice
 | [
 |   25
 | ]
 
-$ echo 1 | jsqry '{[?,?,?,?,?,?]}' -as str -a false -a null -a 2e5 -a [1,2,3] -a '{"K":"V"}'
+$ echo 1 | jsqry '{[?,?,?,?,?,?]}' -as str -a false --arg null -a 2e5 -a [1,2,3] -a '{"K":"V"}'
 | [
 |   [
 |     "str",
@@ -133,7 +133,7 @@ $ echo 1 | jsqry '{[?,?,?,?,?,?]}' -as str -a false -a null -a 2e5 -a [1,2,3] -a
 |   ]
 | ]
 
-$ echo [2,1,3] | jsqry '{ ?[_] }' -a '{"1":"one", "2":"two", "3": "three"}'
+$ echo [2,1,3] | jsqry '{ ?[_] }' --arg '{"1":"one", "2":"two", "3": "three"}'
 | [
 |   "two",
 |   "one",
