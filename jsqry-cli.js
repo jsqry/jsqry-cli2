@@ -77,11 +77,14 @@ function unquoteResult(res) {
     return type === "string" || type === "boolean" || type === "number";
   }
   if (isPrimitive(res)) {
-    return res;
+    return [false, res];
   } else if (Array.isArray(res)) {
-    return res.map((e) => (isPrimitive(e) ? e : JSON.stringify(e))).join("\n");
+    return [
+      res.length > 0,
+      res.map((e) => (isPrimitive(e) ? e : JSON.stringify(e))).join("\n"),
+    ];
   } else {
-    return JSON.stringify(res);
+    return [false, JSON.stringify(res)];
   }
 }
 
@@ -99,8 +102,12 @@ function doWork(jsonStr, queryStr, queryArgs, useFirst, compact, unquote) {
     return "error: " + e;
   }
   if (unquote) {
-    const ur = unquoteResult(res);
-    if (ur !== "") {
+    const [arrayNotEmpty, ur] = unquoteResult(res);
+    if (ur === "") {
+      if (arrayNotEmpty) {
+        print();
+      }
+    } else {
       print(ur);
     }
   } else {
