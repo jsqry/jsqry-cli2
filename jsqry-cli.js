@@ -71,7 +71,7 @@ function err(msg) {
 const isTtyIn = os.isatty(0);
 const isTtyOut = os.isatty(1);
 
-function doWork(jsonStr, queryStr, queryArgs, useFirst) {
+function doWork(jsonStr, queryStr, queryArgs, useFirst, compact) {
   let json;
   try {
     json = JSON.parse(jsonStr);
@@ -84,7 +84,13 @@ function doWork(jsonStr, queryStr, queryArgs, useFirst) {
   } catch (e) {
     return "error: " + e;
   }
-  print(isTtyOut ? colorJson(res, 2) : JSON.stringify(res, null, 2));
+  print(
+    compact
+      ? JSON.stringify(res)
+      : isTtyOut
+      ? colorJson(res, 2)
+      : JSON.stringify(res, null, 2)
+  );
   return null;
 }
 
@@ -144,6 +150,7 @@ Usage: echo $JSON | jsqry 'query'
  -1,--first     return first result element
  -h,--help      print help and exit
  -v,--version   print version and exit
+ -c,--compact   compact output (no pretty-print)
  -as ARG,
  --arg-str ARG  supply string query argument
  -a ARG,
@@ -154,7 +161,8 @@ Usage: echo $JSON | jsqry 'query'
     inputStr,
     args[0] || "",
     queryArgsParsed,
-    params["-1"] || params["--first"]
+    params["-1"] || params["--first"],
+    params["-c"] || params["--compact"]
   );
   if (errMsg) {
     err(errMsg);

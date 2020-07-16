@@ -7,6 +7,7 @@ $ jsqry -h
 |  -1,--first     return first result element
 |  -h,--help      print help and exit
 |  -v,--version   print version and exit
+|  -c,--compact   compact output (no pretty-print)
 |  -as ARG,
 |  --arg-str ARG  supply string query argument
 |  -a ARG,
@@ -75,6 +76,9 @@ $ printf '[{"name":"John","age":30},\n\t{"name":"Alice","age":25},\n\t{"name":"B
 |   "Alice",
 |   "Bob"
 | ]
+
+$ printf '[{"name":"John","age":30},\n\t{"name":"Alice","age":25},\n\t{"name":"Bob","age":50}]' | jsqry 'name' -c
+| ["John","Alice","Bob"]
 
 $ printf '[{"name":"John","age":30},\n\t{"name":"Alice","age":25},\n\t{"name":"Bob","age":50}]' | jsqry -1 'name'
 | "John"
