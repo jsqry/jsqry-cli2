@@ -127,13 +127,32 @@ const QUERY_ARG_STR1 = "--arg-str";
 const QUERY_ARG_OTHER = "-a";
 const QUERY_ARG_OTHER1 = "--arg";
 
+const valueSwitches = {
+  [QUERY_ARG_STR]: 1,
+  [QUERY_ARG_STR1]: 1,
+  [QUERY_ARG_OTHER]: 1,
+  [QUERY_ARG_OTHER1]: 1,
+};
+
+const validSwitches = {
+  "-1": 1,
+  "--first": 1,
+  "-h": 1,
+  "--help": 1,
+  "-v": 1,
+  "--version": 1,
+  "-c": 1,
+  "--compact": 1,
+  "-u": 1,
+  "--unquote": 1,
+  "-as": 1,
+  "--arg-str": 1,
+  "-a": 1,
+  "--arg": 1,
+  ...valueSwitches,
+};
+
 function parseArgs() {
-  const valueSwitches = {
-    [QUERY_ARG_STR]: 1,
-    [QUERY_ARG_STR1]: 1,
-    [QUERY_ARG_OTHER]: 1,
-    [QUERY_ARG_OTHER1]: 1,
-  };
   const params = {};
   const args = [];
   const queryArgs = [];
@@ -165,6 +184,12 @@ const queryArgsParsed = queryArgs.map(([switch_, arg]) =>
     ? arg
     : JSON.parse(arg)
 );
+
+const invalidSwitches = Object.keys(params).filter((p) => !(p in validSwitches));
+if (invalidSwitches.length) {
+  err("Invalid switches: " + invalidSwitches.join(","));
+  std.exit(1);
+}
 
 if (params["-v"] || params["--version"]) {
   print(VERSION);
