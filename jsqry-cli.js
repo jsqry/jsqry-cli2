@@ -160,18 +160,19 @@ function parseArgs() {
 
   for (let i = 1; i < scriptArgs.length; i++) {
     const arg = scriptArgs[i];
-    if (arg.indexOf("-") === 0) {
-      if (!valueSwitches[arg]) {
-        params[arg] = true;
-      }
+    if (valueSwitches[prevArg]) {
+      queryArgs.push([prevArg, arg]);
+      prevArg = null;
     } else {
-      if (valueSwitches[prevArg]) {
-        queryArgs.push([prevArg, arg]);
+      if (arg.indexOf("-") === 0) {
+        if (!valueSwitches[arg]) {
+          params[arg] = true;
+        }
       } else {
         args.push(arg);
       }
+      prevArg = arg;
     }
-    prevArg = arg;
   }
 
   return [params, args, queryArgs];
@@ -185,7 +186,9 @@ const queryArgsParsed = queryArgs.map(([switch_, arg]) =>
     : JSON.parse(arg)
 );
 
-const invalidSwitches = Object.keys(params).filter((p) => !(p in validSwitches));
+const invalidSwitches = Object.keys(params).filter(
+  (p) => !(p in validSwitches)
+);
 if (invalidSwitches.length) {
   err("Invalid switches: " + invalidSwitches.join(","));
   std.exit(1);

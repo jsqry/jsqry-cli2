@@ -153,6 +153,15 @@ $ echo [2,1,3] | jsqry '{ ?[_] }' --arg '{"1":"one", "2":"two", "3": "three"}'
 |   "three"
 | ]
 
+$ echo 1 | jsqry '{[?,?,?]}' -as -a -as "qqq" --arg-str z
+| [
+|   [
+|     "-a",
+|     "qqq",
+|     "z"
+|   ]
+| ]
+
 === unquoted output ===
 
 $ echo '[{"name":"Bob"}, {"name": "Alice"}]' | jsqry 'name' --unquote
