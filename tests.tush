@@ -202,7 +202,7 @@ $ echo '{"json":"{ \"a\": \"b\" }"}' | jsqry 'json' -u | jsqry
 
 === Invalid switches ===
 
-$ echo 1 | jsqry -abc --QWE
+$ echo 1 | jsqry -abc --unquote -1 --QWE
 @ Invalid switches: -abc,--QWE
 ? 1
 
