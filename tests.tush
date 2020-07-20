@@ -1,8 +1,8 @@
 $ jsqry -v
-| 0.0.2
+| 0.1.0
 
 $ jsqry -h
-| jsqry ver. 0.0.2
+| jsqry ver. 0.1.0
 | Usage: echo $JSON | jsqry 'query'
 |  -1,--first     return first result element
 |  -h,--help      print help and exit
