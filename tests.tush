@@ -200,6 +200,29 @@ $ echo '{"json":"{ \"a\": \"b\" }"}' | jsqry 'json' -u | jsqry
 |   }
 | ]
 
+=== Embedded queries ===
+
+$ echo '[{ "name": "Alice", "props": [{ "key": "age", "val": 30 }, { "key": "car", "val": "Volvo" }] },{ "name": "Bob", "props": [{ "key": "age", "val": 40 }] },{ "name": "John", "props": [] }]' | jsqry '{ _.name + " : " + (f(_.props,"[_.key===`age`].val")||"") }'
+| [
+|   "Alice : 30",
+|   "Bob : 40",
+|   "John : "
+| ]
+
+$ echo '[{ "name": "Alice", "props": [{ "key": "age", "val": 30 }, { "key": "car", "val": "Volvo" }] },{ "name": "Bob", "props": [{ "key": "age", "val": 40 }] },{ "name": "John", "props": [] }]' | jsqry '{ _.name + " : " + (f(_.props,"[_.key===?].val", "age")||"") }'
+| [
+|   "Alice : 30",
+|   "Bob : 40",
+|   "John : "
+| ]
+
+$ echo '[{ "name": "Alice", "props": [{ "key": "age", "val": 30 }, { "key": "car", "val": "Volvo" }] },{ "name": "Bob", "props": [{ "key": "age", "val": 40 }] },{ "name": "John", "props": [] }]' | jsqry '{ _.name + " : " + (f(_.props,"[_.key===?].val", ?)||"") }' -as "age"
+| [
+|   "Alice : 30",
+|   "Bob : 40",
+|   "John : "
+| ]
+
 === Invalid switches ===
 
 $ echo 1 | jsqry -abc --unquote -1 --QWE
