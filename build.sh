@@ -2,7 +2,7 @@
 
 set -e
 
-QJS_HOME=~/proj_src/quickjs/
+QJS_HOME=~/soft/quickjs-2020-07-05/
 
 if [[ ! -d ./build ]]
 then
