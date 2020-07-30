@@ -42,7 +42,7 @@ jobs:
           pwd
           ls -l
           ls -l ..
-          ../$(cat .qjsf)/qjsc ../jsqry-cli.js -o jsqry
+          ../$(cat ../.qjsf)/qjsc ../jsqry-cli.js -o jsqry
 
       - name: run tests
         run: |
