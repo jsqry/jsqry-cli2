@@ -52,7 +52,7 @@ jobs:
       - name: "run tests"
         run: |
           pwd
-          export PATH=./tush-master:$PATH
+          export PATH=./tush-master/bin:$PATH
           echo $PATH
           ./tests.sh
 
