@@ -19,22 +19,22 @@ jobs:
 #        run: |
 #          tar xzvf qjsc.tar.gz
 
-      - name: download qjsc # TODO cache
+      - name: "download qjsc" # TODO cache
         run: |
           echo "quickjs-2020-07-05" > .qjsf
           wget https://bellard.org/quickjs/$(cat .qjsf).tar.xz
 
-      - name: extract quickjs
+      - name: "extract quickjs"
         run: |
           tar xvf ./$(cat .qjsf).tar.xz
 
-      - name: compile qjsc
+      - name: "compile qjsc"
         run: |
           cd $(cat .qjsf)
           pwd
           make qjsc libquickjs.a
 
-      - name: build jsqry
+      - name: "build jsqry"
         run: |
           pwd
           mkdir build
@@ -44,9 +44,16 @@ jobs:
           ls -l ..
           ../$(cat ../.qjsf)/qjsc ../jsqry-cli.js -o jsqry
 
-      - name: run tests
+      - name: "prepare test tool"
+        run: |
+          wget https://github.com/adolfopa/tush/archive/master.zip -O./tush.zip
+          unzip ./tush.zip
+
+      - name: "run tests"
         run: |
           pwd
-          bash ./tests.sh
+          export PATH=./tush-master:$PATH
+          echo $PATH
+          ./tests.sh
 
 
