@@ -9,12 +9,20 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-#      - uses: actions/cache@v2
-#        id: cache-qjsc
-#        with:
-#          path: path/to/dependencies
+      - uses: actions/cache@v2
+        id: cache-qjsc
+        with:
+          path: quickjs
+          key: quickjs-1
+
+      - uses: actions/cache@v2
+        id: cache-tush
+        with:
+          path: tush
+          key: tush-1
 
       - name: "download & extract & compile qjsc"
+        if: steps.cache-qjsc.outputs.cache-hit != 'true'
         run: |
           QJS=quickjs-2020-07-05
           wget https://bellard.org/quickjs/$QJS.tar.xz
@@ -35,12 +43,14 @@ jobs:
           ../quickjs/qjsc ../jsqry-cli.js -o jsqry
 
       - name: "prepare test tool"
+        if: steps.cache-tush.outputs.cache-hit != 'true'
         run: |
           wget https://github.com/adolfopa/tush/archive/master.zip -O./tush.zip
           unzip ./tush.zip
+          mv tush-master tush
 
       - name: "run tests"
         run: |
-          export PATH=$(cd ./tush-master/bin; pwd):$PATH
+          export PATH=$(cd ./tush/bin; pwd):$PATH
           echo "PATH=$PATH"
           ./tests.sh
