@@ -11,7 +11,7 @@ jobs:
       - name: download qjsc # TODO cache
         # file uploaded in https://github.com/jsqry/jsqry-cli2/issues/15
         run: |
-          wget https://github.com/jsqry/jsqry-cli2/files/5001580/qjsc.tar.gz
+          wget https://github.com/jsqry/jsqry-cli2/files/5001636/qjsc.tar.gz
 
       - name: extract qjsc
         run: |
