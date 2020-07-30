@@ -3,32 +3,36 @@ on: ["push", "pull_request"]
 name: "Build and test"
 
 jobs:
-
   build:
     name: Build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
 
-      - name: "download qjsc" # TODO cache
-        run: |
-          echo "quickjs-2020-07-05" > .qjsf
-          wget https://bellard.org/quickjs/$(cat .qjsf).tar.xz
+#      - uses: actions/cache@v2
+#        id: cache-qjsc
+#        with:
+#          path: path/to/dependencies
 
-      - name: "extract quickjs"
+      - name: "download & extract & compile qjsc"
         run: |
-          tar xvf ./$(cat .qjsf).tar.xz
+          QJS=quickjs-2020-07-05
+          wget https://bellard.org/quickjs/$QJS.tar.xz
+          tar xvf ./$QJS.tar.xz
+          mv $QJS quickjs
 
-      - name: "compile qjsc"
-        run: |
-          cd $(cat .qjsf)
+          echo
+          echo "Compile"
+          echo
+
+          cd quickjs
           make qjsc libquickjs.a
 
       - name: "build jsqry"
         run: |
           mkdir build
           cd build
-          ../$(cat ../.qjsf)/qjsc ../jsqry-cli.js -o jsqry
+          ../quickjs/qjsc ../jsqry-cli.js -o jsqry
 
       - name: "prepare test tool"
         run: |
@@ -40,5 +44,3 @@ jobs:
           export PATH=$(cd ./tush-master/bin; pwd):$PATH
           echo "PATH=$PATH"
           ./tests.sh
-
-
