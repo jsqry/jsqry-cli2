@@ -1,0 +1,30 @@
+on: ["push", "pull_request"]
+
+name: "Build and test"
+
+jobs:
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: download qjsc # TODO cache
+        # file uploaded in https://github.com/jsqry/jsqry-cli2/issues/15
+        run: |
+          wget https://github.com/jsqry/jsqry-cli2/files/5001580/qjsc.tar.gz
+
+      - name: extract qjsc
+        run: |
+          tar xzvf qjsc.tar.gz
+
+      - name: build jsqry
+        run: |
+          mkdir build
+          cd build
+          ../qjsc/qjsc ../jsqry-cli.js -o jsqry
+
+      - name: run tests
+        run: |
+          bash ./tests.sh
+
+
