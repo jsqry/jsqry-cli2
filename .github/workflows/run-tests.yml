@@ -10,15 +10,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-#      - name: download qjsc # TODO cache
-#         # file uploaded in https://github.com/jsqry/jsqry-cli2/issues/15
-#        run: |
-#          wget https://github.com/jsqry/jsqry-cli2/files/5001636/qjsc.tar.gz
-#
-#      - name: extract qjsc
-#        run: |
-#          tar xzvf qjsc.tar.gz
-
       - name: "download qjsc" # TODO cache
         run: |
           echo "quickjs-2020-07-05" > .qjsf
@@ -31,17 +22,12 @@ jobs:
       - name: "compile qjsc"
         run: |
           cd $(cat .qjsf)
-          pwd
           make qjsc libquickjs.a
 
       - name: "build jsqry"
         run: |
-          pwd
           mkdir build
           cd build
-          pwd
-          ls -l
-          ls -l ..
           ../$(cat ../.qjsf)/qjsc ../jsqry-cli.js -o jsqry
 
       - name: "prepare test tool"
@@ -51,9 +37,8 @@ jobs:
 
       - name: "run tests"
         run: |
-          pwd
           export PATH=$(cd ./tush-master/bin; pwd):$PATH
-          echo "PATH 1111 $PATH"
+          echo "PATH=$PATH"
           ./tests.sh
 
 
