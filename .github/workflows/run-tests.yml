@@ -21,15 +21,16 @@ jobs:
 
       - name: download qjsc # TODO cache
         run: |
-          wget https://bellard.org/quickjs/quickjs-2020-07-05.tar.xz
+          echo "quickjs-2020-07-05" > .qjsf
+          wget https://bellard.org/quickjs/$(cat .qjsf).tar.xz
 
       - name: extract quickjs
         run: |
-          tar xvf ./quickjs-*.tar.xz
+          tar xvf ./$(cat .qjsf).tar.xz
 
       - name: compile qjsc
         run: |
-          cd quickjs-*
+          cd $(cat .qjsf)
           pwd
           make qjsc
 
@@ -41,7 +42,7 @@ jobs:
           pwd
           ls -l
           ls -l ..
-          ../quickjs-*/qjsc ../jsqry-cli.js -o jsqry
+          ../$(cat .qjsf)/qjsc ../jsqry-cli.js -o jsqry
 
       - name: run tests
         run: |
