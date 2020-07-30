@@ -21,6 +21,9 @@ jobs:
         run: |
           mkdir build
           cd build
+          pwd
+          ls -l
+          ls -l ..
           ../qjsc/qjsc ../jsqry-cli.js -o jsqry
 
       - name: run tests
