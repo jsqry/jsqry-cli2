@@ -6,6 +6,8 @@ mydir=$(cd "$(dirname $0)" ; pwd)
 
 export PATH=$mydir/build:$PATH:~/proj_src/tush/bin/
 
+echo "PATH 2222 $PATH"
+
 #which jsqry
 #jsqry -v
 
