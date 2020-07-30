@@ -8,6 +8,8 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+
       - name: download qjsc # TODO cache
         # file uploaded in https://github.com/jsqry/jsqry-cli2/issues/15
         run: |
