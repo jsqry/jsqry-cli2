@@ -1,5 +1,7 @@
 # jsqry-cli2
 
+![Build and test](https://github.com/jsqry/jsqry-cli2/workflows/Build%20and%20test/badge.svg)
+
 `jsqry` is a small command line tool (similar to [jq](https://github.com/stedolan/jq)) to query JSON using sane DSL.
 
 The purpose of this app is to expose the functionality of [jsqry](https://github.com/jsqry/jsqry) JS library in form of CLI.
