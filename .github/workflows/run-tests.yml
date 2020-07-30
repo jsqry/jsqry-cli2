@@ -32,7 +32,7 @@ jobs:
         run: |
           cd $(cat .qjsf)
           pwd
-          make qjsc
+          make qjsc libquickjs.a
 
       - name: build jsqry
         run: |
