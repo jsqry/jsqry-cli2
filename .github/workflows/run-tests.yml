@@ -10,26 +10,42 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: download qjsc # TODO cache
-        # file uploaded in https://github.com/jsqry/jsqry-cli2/issues/15
-        run: |
-          wget https://github.com/jsqry/jsqry-cli2/files/5001636/qjsc.tar.gz
+#      - name: download qjsc # TODO cache
+#         # file uploaded in https://github.com/jsqry/jsqry-cli2/issues/15
+#        run: |
+#          wget https://github.com/jsqry/jsqry-cli2/files/5001636/qjsc.tar.gz
+#
+#      - name: extract qjsc
+#        run: |
+#          tar xzvf qjsc.tar.gz
 
-      - name: extract qjsc
+      - name: download qjsc # TODO cache
         run: |
-          tar xzvf qjsc.tar.gz
+          wget https://bellard.org/quickjs/quickjs-2020-07-05.tar.xz
+
+      - name: extract quickjs
+        run: |
+          tar xvf ./quickjs-*.tar.xz
+
+      - name: compile qjsc
+        run: |
+          cd quickjs-*
+          pwd
+          make qjsc
 
       - name: build jsqry
         run: |
+          pwd
           mkdir build
           cd build
           pwd
           ls -l
           ls -l ..
-          ../qjsc/qjsc ../jsqry-cli.js -o jsqry
+          ../quickjs-*/qjsc ../jsqry-cli.js -o jsqry
 
       - name: run tests
         run: |
+          pwd
           bash ./tests.sh
 
 
