@@ -98,7 +98,7 @@ $ echo '["HTTP://EXAMPLE.COM/123",
 
 ```
 $ jsqry
-jsqry ver. 0.1.0
+jsqry ver. 0.1.1
 Usage: echo $JSON | jsqry 'query'
  -1,--first     return first result element
  -h,--help      print help and exit
@@ -117,7 +117,7 @@ https://gist.github.com/xonixx/d6066e83ec0773df248141440b18e8e4
 
 ## Install
 
-Current version: [0.1.0](https://github.com/jsqry/jsqry-cli2/releases/tag/v0.1.0).
+Current version: [0.1.1](https://github.com/jsqry/jsqry-cli2/releases/tag/v0.1.1).
 
 Sorry, but only Linux x64 is supported at the moment. Hopefully this will improve.
 
@@ -125,7 +125,7 @@ To install or update the tool simply run the command below.
 
 ```bash
 $ sudo bash -e -c "
-wget https://github.com/jsqry/jsqry-cli2/releases/download/v0.1.0/jsqry-linux-amd64 -O/usr/local/bin/jsqry
+wget https://github.com/jsqry/jsqry-cli2/releases/download/v0.1.1/jsqry-linux-amd64 -O/usr/local/bin/jsqry
 chmod +x /usr/local/bin/jsqry
 echo \"jsqry \$(jsqry -v) installed successfully\" 
 "

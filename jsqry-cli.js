@@ -3,7 +3,7 @@ import * as os from "os";
 import jsqry from "./jsqry.js";
 import colorJson from "./colorJson.js";
 
-const VERSION = "0.1.0";
+const VERSION = "0.1.1";
 
 // based on code from https://github.com/twardoch/svgop/blob/master/src/app/svgop-qjs.js
 const utf8ArrayToStr = (function () {
