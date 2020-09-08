@@ -2,7 +2,9 @@
 
 set -e
 
-QJS_HOME=~/soft/quickjs-2020-07-05/
+#QJS_HOME=~/proj_src/quickjs/
+#QJS_HOME=~/soft/quickjs-2020-07-05/
+QJS_HOME=~/soft/quickjs-2020-09-06/
 
 if [[ ! -d ./build ]]
 then
@@ -16,8 +18,7 @@ cd ./build/
 #    -fno-regexp \
 #    -fno-eval \
 
-# TODO: adding this setting causes https://github.com/jsqry/jsqry-cli2/issues/1
-#     -fno-bigint \
+echo "Compiling with $($QJS_HOME/qjsc | grep version)"
 
 $QJS_HOME/qjsc \
     -flto \
@@ -27,7 +28,11 @@ $QJS_HOME/qjsc \
     -fno-map \
     -fno-typedarray \
     -fno-string-normalize \
+    -fno-bigint \
     ../jsqry-cli.js -o jsqry
 
 ls -lh jsqry
+
+cd ..
+./tests.sh && echo 'TESTS PASSED' || echo 'TESTS FAILED'
 

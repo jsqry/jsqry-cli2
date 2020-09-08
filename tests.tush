@@ -232,3 +232,16 @@ $ echo 1 | jsqry -abc --unquote -1 --QWE
 $ jsqry -abc --QWE
 @ Invalid switches: -abc,--QWE
 ? 1
+
+=== Segfault #1 ===
+
+$ echo '[{"a":1},{"a":"hello"}]' | jsqry '[_.a>1]'
+| []
+
+$ echo '[{"a":1},{"a":"hello"}, {"a":2}]' | jsqry '[_.a>1]'
+| [
+|   {
+|     "a": 2
+|   }
+| ]
+
