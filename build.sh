@@ -34,5 +34,5 @@ $QJS_HOME/qjsc \
 ls -lh jsqry
 
 cd ..
-./tests.sh && echo 'TESTS PASSED' || echo 'TESTS FAILED'
+./tests.sh
 

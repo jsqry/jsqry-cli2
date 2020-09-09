@@ -9,4 +9,4 @@ export PATH=$mydir/build:$PATH:~/proj_src/tush/bin/
 #which jsqry
 #jsqry -v
 
-tush-check tests.tush
+tush-check tests.tush && echo 'TESTS PASSED' || (echo '!!! TESTS FAILED !!!' ; exit 1)
