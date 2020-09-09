@@ -13,7 +13,7 @@ jobs:
         id: cache-qjsc
         with:
           path: quickjs
-          key: quickjs-1
+          key: quickjs-2020-09-06
 
       - uses: actions/cache@v2
         id: cache-tush
@@ -24,7 +24,7 @@ jobs:
       - name: "download & extract & compile qjsc"
         if: steps.cache-qjsc.outputs.cache-hit != 'true'
         run: |
-          QJS=quickjs-2020-07-05
+          QJS=quickjs-2020-09-06
           wget https://bellard.org/quickjs/$QJS.tar.xz
           tar xvf ./$QJS.tar.xz
           mv $QJS quickjs
