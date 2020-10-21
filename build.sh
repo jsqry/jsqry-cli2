@@ -27,6 +27,7 @@ if [ ! -f "$QJS_HOME/qjsc" ]; then
   QJS=quickjs-$QJS_VERSION
   wget https://bellard.org/quickjs/$QJS.tar.xz
   tar xvf ./$QJS.tar.xz
+  rm ./$QJS.tar.xz
 
   echo
   echo "Compile QJSC..."
