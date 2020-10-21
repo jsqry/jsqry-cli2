@@ -2,13 +2,14 @@ export default (function (root, factory) { return factory()
 })(this, function (undefined) {
   const fn = {};
   const jsqry = {
-    first: first,
-    query: query,
+    first,
+    query,
+    queryWithSingleMarker,
     cache: true,
     ast_cache: {},
-    fn: fn,
-    parse: parse,
-    printAst: printAst,
+    fn,
+    parse,
+    printAst,
   };
 
   const TYPE_PATH = 1;
@@ -293,6 +294,12 @@ export default (function (root, factory) { return factory()
   }
 
   function query(obj, expr) {
+    const res = queryWithSingleMarker.apply(null, arguments);
+    delete res._$single;
+    return res;
+  }
+
+  function queryWithSingleMarker(obj, expr) {
     const args = Array.prototype.slice.call(arguments, 2);
     const ast = jsqry.parse(expr);
     if (args.length !== ast.args_count) throw "Wrong args count";
@@ -301,7 +308,10 @@ export default (function (root, factory) { return factory()
 
   function _queryAst(obj, ast, args) {
     if (!obj) return [];
-    if (!isArr(obj)) obj = [obj];
+    if (!isArr(obj)) {
+      obj = [obj];
+      obj._$single = true;
+    }
 
     for (let i = 0; i < ast.length; i++) {
       obj = exec(obj, ast[i], args);
@@ -320,6 +330,7 @@ export default (function (root, factory) { return factory()
   function calcIndex(list, index) {
     // console.info('idx', list, index)
     const res = [];
+    if (list._$single) res._$single = true;
     const idx_cnt = index.length;
     const len = list.length;
     if (idx_cnt === 1) {
@@ -375,6 +386,7 @@ export default (function (root, factory) { return factory()
   function exec(data, token, args) {
     // console.log('Exec', data, token);
     let res = [];
+    if (data._$single) res._$single = true;
 
     function _applyFunc() {
       for (let i = 0; i < data.length; i++) {
@@ -392,6 +404,7 @@ export default (function (root, factory) { return factory()
           v = data[i];
         }
         if (isArr(v)) {
+          delete res._$single;
           for (let j = 0; j < v.length; j++) {
             res.push(v[j]);
           }
@@ -400,9 +413,11 @@ export default (function (root, factory) { return factory()
         }
       }
     } else if (token.type === TYPE_FILTER) {
-      if (token.sub_type === SUB_TYPE_FUNC) _applyFunc();
-      else if (token.sub_type === SUB_TYPE_INDEX)
+      if (token.sub_type === SUB_TYPE_FUNC) {
+        _applyFunc();
+      } else if (token.sub_type === SUB_TYPE_INDEX) {
         res = calcIndex(data, token.index);
+      }
     } else if (token.type === TYPE_NESTED_FILTER) {
       _applyFunc();
     } else if (token.type === TYPE_MAP) {

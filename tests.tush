@@ -130,20 +130,18 @@ $ echo '[{"name": "Bob", "age": 30}, {"name": "Alice", "age": 25}]' | jsqry '[_.
 
 $ echo 1 | jsqry '{[?,?,?,?,?,?]}' -as str -a false --arg null -a 2e5 -a [1,2,3] -a '{"K":"V"}'
 | [
+|   "str",
+|   false,
+|   null,
+|   200000,
 |   [
-|     "str",
-|     false,
-|     null,
-|     200000,
-|     [
-|       1,
-|       2,
-|       3
-|     ],
-|     {
-|       "K": "V"
-|     }
-|   ]
+|     1,
+|     2,
+|     3
+|   ],
+|   {
+|     "K": "V"
+|   }
 | ]
 
 $ echo [2,1,3] | jsqry '{ ?[_] }' --arg '{"1":"one", "2":"two", "3": "three"}'
@@ -155,11 +153,9 @@ $ echo [2,1,3] | jsqry '{ ?[_] }' --arg '{"1":"one", "2":"two", "3": "three"}'
 
 $ echo 1 | jsqry '{[?,?,?]}' -as -a -as "qqq" --arg-str z
 | [
-|   [
-|     "-a",
-|     "qqq",
-|     "z"
-|   ]
+|   "-a",
+|   "qqq",
+|   "z"
 | ]
 
 === unquoted output ===
@@ -194,11 +190,9 @@ $ echo '[null,"null","\"test quotes"]' | jsqry -u
 | "test quotes
 
 $ echo '{"json":"{ \"a\": \"b\" }"}' | jsqry 'json' -u | jsqry
-| [
-|   {
-|     "a": "b"
-|   }
-| ]
+| {
+|   "a": "b"
+| }
 
 === Embedded queries ===
 
@@ -244,4 +238,11 @@ $ echo '[{"a":1},{"a":"hello"}, {"a":2}]' | jsqry '[_.a>1]'
 |     "a": 2
 |   }
 | ]
+
+=== https://github.com/jsqry/jsqry-cli2/issues/24 ===
+
+$ echo '{"a":123}' | jsqry
+| {
+|   "a": 123
+| }
 

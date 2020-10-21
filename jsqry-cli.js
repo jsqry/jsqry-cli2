@@ -97,7 +97,14 @@ function doWork(jsonStr, queryStr, queryArgs, useFirst, compact, unquote) {
   }
   let res;
   try {
-    res = (useFirst ? jsqry.first : jsqry.query)(json, queryStr, ...queryArgs);
+    res = (useFirst ? jsqry.first : jsqry.queryWithSingleMarker)(
+      json,
+      queryStr,
+      ...queryArgs
+    );
+    if (res != null && res._$single && res.length === 1) {
+      res = res[0];
+    }
   } catch (e) {
     return "error: " + e;
   }
