@@ -63,15 +63,13 @@
 
 Итак, что же такое `jsqry`?
 
-`jsqry` is a small command line tool (similar to [jq](https://github.com/stedolan/jq)) to query JSON using sane DSL.
+`jsqry` это маленькая утилита командной строки (похожая на [jq](https://github.com/stedolan/jq)) для выполнения запросов к JSON используя "человеческий" DSL.
 
-The purpose of this app is to expose the functionality of [jsqry](https://github.com/jsqry/jsqry) JS library in form of CLI.
+Цель этой разработки - представить функционал JS библиотеки [jsqry](https://github.com/jsqry/jsqry) в форме интерфейса командной строки. 
 
-Unlike [jsqry-cli](https://github.com/jsqry/jsqry-cli) this one is based on [QuickJS](https://bellard.org/quickjs/) by [Fabrice Bellard](https://bellard.org/).
+## Примеры использования
 
-## Examples
-
-#### query
+#### запрос
 ```
 $ echo '[{"name":"John","age":30},
          {"name":"Alice","age":25},
@@ -83,7 +81,7 @@ $ echo '[{"name":"John","age":30},
 ]
 ```
 
-#### first element
+#### первый элемент
 
 ```
 $ echo '[{"name":"John","age":30},
@@ -92,7 +90,7 @@ $ echo '[{"name":"John","age":30},
 "John"
 ```
 
-#### use query parametrization
+#### использование параметризации запроса
 
 ```
 $ echo '[{"name":"John","age":30},{"name":"Alice","age":25},{"name":"Bob","age":50}]' \
@@ -105,7 +103,7 @@ $ echo '[{"name":"John","age":30},{"name":"Alice","age":25},{"name":"Bob","age":
 ]
 ```
 
-#### use as simple JSON pretty-printer
+#### использование в роли простого JSON pretty-printer
 
 ```
 $ echo '[{"name":"John","age":30},{"name":"Alice","age":25},{"name":"Bob","age":50}]' | jsqry
@@ -125,12 +123,12 @@ $ echo '[{"name":"John","age":30},{"name":"Alice","age":25},{"name":"Bob","age":
 ]
 ```
 
-The output is pretty-printed by default.
+Выходной JSON утилиты по умолчанию отформатирован. И раскрашен!
 
-#### something trickier
+#### что-то более хитрое
 
-Filter greater than 2, map adding 100, sort descending, take last 2 elements. 
-By combining these features you can build arbitrary complex queries. [Find more on supported DSL](https://jsqry.github.io/).
+Отфильтровать элементы больше 2, добавить к каждому 100, отсортировать по убыванию и взять 2 последних элемента.
+Комбинируя эти возможности вы можете строить сколь угодно сложные запросы. [Узнать больше о поддерживаемом DSL](https://jsqry.github.io/).
 
 ```
 $ echo '[1,2,3,4,5]' | jsqry '[_>2] {_+100} s(-_) [-2:]'
@@ -140,9 +138,10 @@ $ echo '[1,2,3,4,5]' | jsqry '[_>2] {_+100} s(-_) [-2:]'
 ]
 ```
 
-#### full JS power
+#### полная мощь JS
 
 Since `jsqry` bundles the full-fledged [JS engine](https://bellard.org/quickjs/) in under 1 MB executable, the full power of JS is in your hands!
+Поскольку `jsqry` вмещает полноценный [JS-движок](https://bellard.org/quickjs/) в исполняемом файле менее 1 Мб, полная мощь JS в ваших руках!
 
 ```
 $ echo '["HTTP://EXAMPLE.COM/123", 
@@ -155,7 +154,7 @@ $ echo '["HTTP://EXAMPLE.COM/123",
 ]
 ```  
 
-#### help message
+#### help-сообщение
 
 ```
 $ jsqry
@@ -172,17 +171,18 @@ Usage: echo $JSON | jsqry 'query'
  --arg ARG      supply query argument of any other type
 ```
 
-## Compare to jq
+## Небольшое сравнение с `jq`
 
 https://gist.github.com/xonixx/d6066e83ec0773df248141440b18e8e4
 
-## Install
+## Установка
 
-Current version: [0.1.2](https://github.com/jsqry/jsqry-cli2/releases/tag/v0.1.2).
+Текущая версия (на момент написания): [0.1.2](https://github.com/jsqry/jsqry-cli2/releases/tag/v0.1.2).
 
-Sorry, but only Linux x64 is supported at the moment. Hopefully this will improve.
+К сожалению, только Linux x64 поддерживается в данный момент. Надеюсь, поддержка других платформ будет скоро добавлена.
+Буду рад здесь вашей помощи. 
 
-To install or update the tool simply run the command below.
+Чтобы установить или обновить утилиту, просто выполните в командной строке приведенную ниже команду:
 
 ```bash
 $ sudo bash -e -c "

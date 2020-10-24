@@ -64,7 +64,7 @@ $ echo '[{"name":"John","age":30},{"name":"Alice","age":25},{"name":"Bob","age":
 ]
 ```
 
-The output is pretty-printed by default.
+The output is pretty-printed by default. And colored!
 
 #### something trickier
 
