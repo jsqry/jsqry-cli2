@@ -1,5 +1,5 @@
 
-# Лучше, чем jq
+# jsqry - лучше, чем jq
 
 В своей [прошлой статье на Хабре](https://habr.com/ru/post/303624/) я писал про библиотеку 
 [Jsqry](https://github.com/jsqry/jsqry), которая предоставляет простой и удобный язык запросов DSL 
@@ -48,7 +48,9 @@
 получался 99 Мб. Как-то не очень хорошо для простой утилиты командной строки.
 Тем более, если сравнить с `jq` с её размером 3.7 Мб для [последней версии для Linux 64](https://github.com/stedolan/jq/releases/tag/jq-1.6).
 
-В идеале хотелось-бы получить размер не больше мегабайта.
+В идеале хотелось бы получить размер не больше мегабайта.
+
+Тем не менее, решил оставить этот репозиторий как практический пример того как собрать из Java + JS кода исполняемый файл при помощи GraalVM.
 
 ## jsqry - QuickJS edition
 
@@ -140,7 +142,6 @@ $ echo '[1,2,3,4,5]' | jsqry '[_>2] {_+100} s(-_) [-2:]'
 
 #### полная мощь JS
 
-Since `jsqry` bundles the full-fledged [JS engine](https://bellard.org/quickjs/) in under 1 MB executable, the full power of JS is in your hands!
 Поскольку `jsqry` вмещает полноценный [JS-движок](https://bellard.org/quickjs/) в исполняемом файле менее 1 Мб, полная мощь JS в ваших руках!
 
 ```
@@ -191,6 +192,15 @@ chmod +x /usr/local/bin/jsqry
 echo \"jsqry \$(jsqry -v) installed successfully\" 
 "
 ```
+
+## О тестировании CLI-утилиты
+
+
+
+https://github.com/adolfopa/tush
+https://github.com/jsqry/jsqry-cli2/blob/master/tests.tush
+
+
 
 
  

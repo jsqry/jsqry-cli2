@@ -1,6 +1,6 @@
 # jsqry-cli2
 
-![Build and test](https://github.com/jsqry/jsqry-cli2/workflows/Build%20and%20test/badge.svg)
+[![Build and test](https://github.com/jsqry/jsqry-cli2/workflows/Build%20and%20test/badge.svg)](https://github.com/jsqry/jsqry-cli2/actions?query=workflow%3A%22Build+and+test%22)
 
 `jsqry` is a small command line tool (similar to [jq](https://github.com/stedolan/jq)) to query JSON using sane DSL.
 
