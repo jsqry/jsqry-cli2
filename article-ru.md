@@ -195,10 +195,34 @@ echo \"jsqry \$(jsqry -v) installed successfully\"
 
 ## О тестировании CLI-утилиты
 
+При разработке утилиты на Github хотелось реализовать какое-то подобие автоматического тестирования.
+Юнит-тесты довольно просто писать, когда вы работаете на уровне языка программирования.
+Интереснее дело обстоит если хочется протестировать CLI-утилиту как единое целое, как черный ящик.
+Благо, в нашем случае это должно быть просто и логично, поскольку утилита представляет собой то, что функциональщики бы назвали
+чистой функций - выход определяется исключительно входом.
+
+Попытав Гугл запросами вида "bash unit testing" и отметя варианты [BATS](https://opensource.com/article/19/2/testing-bash-bats),
+[ShellSpec](https://shellspec.info/), [Bach](https://bach.sh/) и несколько других подходов, как чересчур 
+тяжеловесные для моего случая, а также самописную систему тестирования ([картинка про 14 стандартов](https://xkcd.ru/927/)), 
+остановился на решении [tush](https://github.com/adolfopa/tush), гениальном в своей простоте.   
+
+!!!TODO describe tush
+
+Таким образом удалось покрыть тестами базовые сценарии работы с утилитой в виде одного файла
+https://github.com/jsqry/jsqry-cli2/blob/master/tests.tush.
+Что особенно ценно, подобное тестовое описание одновременно может служить хорошую документирующую роль, 
+демонстрируя типичные примеры использования.
+
+Удалось этот тестовый сценарий реализовать [в виде Github Action](https://github.com/jsqry/jsqry-cli2/blob/master/.github/workflows/run-tests.yml), 
+который запускается на каждый коммит, гарантируя корректность каждого изменения 
+и предоставляя замечательный бейдж [![Build and test](https://github.com/jsqry/jsqry-cli2/workflows/Build%20and%20test/badge.svg)](https://github.com/jsqry/jsqry-cli2/actions?query=workflow%3A%22Build+and+test%22).
+
+## !!!TODO colorJson && non-console
+## !!!TODO package.json && prepare-for-qjs.py
+## !!!TODO read UTF8 stdin
+## !!!TODO build.sh && automatically install soft && file size && auto-run tests
 
 
-https://github.com/adolfopa/tush
-https://github.com/jsqry/jsqry-cli2/blob/master/tests.tush
 
 
 
