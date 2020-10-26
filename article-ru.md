@@ -273,7 +273,17 @@ https://github.com/jsqry/jsqry-cli2/blob/master/tests.tush.
 который запускается на каждый коммит, гарантируя корректность каждого изменения 
 и предоставляя замечательный бейдж [![Build and test](https://github.com/jsqry/jsqry-cli2/workflows/Build%20and%20test/badge.svg)](https://github.com/jsqry/jsqry-cli2/actions?query=workflow%3A%22Build+and+test%22).
 
+## Другие особенности решения
+
 ## !!!TODO colorJson && non-console
+
+Добавить раскраску выходного JSON оказалось на удивление [просто](https://github.com/jsqry/jsqry-cli2/blob/master/colorJson.js).
+Решение основано на подходе из проекта [zvakanaka/color-json](https://github.com/zvakanaka/color-json) с немного оптимизированными цветами,
+которые были подобраны на основе прекраснейшего StackOverflow [комментария](https://stackoverflow.com/a/28938235/104522). 
+Для примера привожу сравнение раскраски с `jq`. В моей версии строки более яркие, а null имеет красный цвет для пущей заметности.
+
+![]()
+
 ## !!!TODO package.json && prepare-for-qjs.py
 ## !!!TODO read UTF8 stdin
 ## !!!TODO build.sh && automatically install soft && file size && auto-run tests
