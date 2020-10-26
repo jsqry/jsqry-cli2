@@ -275,17 +275,34 @@ https://github.com/jsqry/jsqry-cli2/blob/master/tests.tush.
 
 ## Другие особенности решения
 
-## !!!TODO colorJson && non-console
+### Раскрашивание JSON
 
 Добавить раскраску выходного JSON оказалось на удивление [просто](https://github.com/jsqry/jsqry-cli2/blob/master/colorJson.js).
 Решение основано на подходе из проекта [zvakanaka/color-json](https://github.com/zvakanaka/color-json) с немного оптимизированными цветами,
 которые были подобраны на основе прекраснейшего StackOverflow [комментария](https://stackoverflow.com/a/28938235/104522). 
 Для примера привожу сравнение раскраски с `jq`. В моей версии строки более яркие, а null имеет красный цвет для пущей заметности.
 
-![](https://github.com/jsqry/jsqry-cli2/raw/article/article-1.png)
+![screenshot](https://github.com/jsqry/jsqry-cli2/raw/article/article-1.png)
 
-## !!!TODO package.json && prepare-for-qjs.py
-## !!!TODO read UTF8 stdin
+Понятно, что раскрашивание будет выполняться только при работе с терминалом.
+
+### Подключение npm-версии библиотеки в QuickJS
+
+Опишу немного процесс по которому [npm-версия](https://www.npmjs.com/package/jsqry) библиотеки `jsqry` подтягивается 
+и включается в результирующий исполняемый файл. Для этого присутствует стандартный [package.json](https://github.com/jsqry/jsqry-cli2/blob/master/package.json)
+с необходимой версией библиотеки. Библиотека вытягивается стандартным `npm i`. 
+Затем используется небольшой скрипт [prepare-for-qjs.py](https://github.com/jsqry/jsqry-cli2/blob/master/prepare-for-qjs.py)
+роль которого состоит в замене экспортирования в стиле nodejs на экспортирование в стиле модулей ES, только последнее поддерживается
+движком QuickJS. Далее уже полученный файл импортируется в основной код утилиты [jsqry-cli.js](https://github.com/jsqry/jsqry-cli2/blob/master/jsqry-cli.js).
+
+### Чтение входной строки в UTF-8 в QuickJS
+
+В случае QuickJS некоторой мороки стоит считывание строки с stdin. Дело в том, что [минималистичная стандартная 
+библиотека](https://bellard.org/quickjs/quickjs.html#Standard-library), доступная в QuickJS, реализует только считывание
+байтов. Поэтому понадобился некоторый [ручной код](https://github.com/jsqry/jsqry-cli2/blob/master/jsqry-cli.js#L8)
+чтоб перегнать байтики UTF-8 в JS строку. Слава богу, его не пришлось изобретать, а удалось позаимствовать 
+из другого проекта на QuickJS: [twardoch/svgop](https://github.com/twardoch/svgop).  
+
 ## !!!TODO build.sh && automatically install soft && file size && auto-run tests
 
 
