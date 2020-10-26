@@ -52,15 +52,41 @@
 
 Тем не менее, решил оставить этот репозиторий как практический пример того как собрать из Java + JS кода исполняемый файл при помощи GraalVM.
 
-## !!!TODO java.nio.file.FileSystemNotFoundException: Provider "resource" not installed
+## Небольшой обзор этого решения
+
+Решение имеет основной код запускаемого приложения в единственном файле [App.java](https://github.com/jsqry/jsqry-cli/blob/master/src/main/java/com/github/jsqry/cli/App.java).
+Этот код выполняет обработку параметров командной строки используя стандартную java-библиотеку Apache Commons CLI.
+
+Далее java-код вызывает код на javascript из файлов, находящихся в директории ресурсов src/main/resources.
+
+При этом интересный момент. Вроде-бы простейший код для вычитывания содержимого файла из ресурса
+
+```java
+scripts.add(new String(Files.readAllBytes(Paths.get(jsFileResource.toURI()))));
+```
+
+Под Граалем (то есть, будучи скомпилированным через [native-image](https://www.graalvm.org/reference-manual/native-image/)) падало с 
+```
+java.nio.file.FileSystemNotFoundException: Provider "resource" not installed
+```                                                                                                                      
+
+Выручил древний "хак" для чтения строки из `InputStream`
+```java
+scripts.add(new Scanner(jsFileResource.openStream()).useDelimiter("\\A").next());
+```                         
+
+Короче говоря, надеяться на 100% поддержку всех функций стандартной Java Граалем все еще не приходится.
+
+Недавно аналогичной неприятной находкой оказалось [отсутствие поддержки java.awt.Graphics](https://github.com/oracle/graal/issues/1163).
+Это помешало использовать GraalVM для реализации AWS Lambda для конвертации картинок. 
+
 
 ## jsqry - QuickJS edition
 
 Где-то в это же время я узнал о новом компактном движке JS [QuickJS](https://bellard.org/quickjs/) от гениального 
 французского программиста [Фабриса Беллара](https://ru.wikipedia.org/wiki/%D0%91%D0%B5%D0%BB%D0%BB%D0%B0%D1%80,_%D0%A4%D0%B0%D0%B1%D1%80%D0%B8%D1%81).
 В своем составе этот инструмент несёт компилятор `qjsc` джаваскрипта в исполняемый файл.
-Также поддерживается почти полная совместимость с ES2020.  
-То что нужно! 
+Также поддерживается почти полная совместимость с ES2020. То что нужно! 
 
 Таким образом, появилась вторая инкарнация CLI-версии `jsqry`: https://github.com/jsqry/jsqry-cli2.
 Этот подход оказался более жизнеспособным и уже принес несколько релизов.
