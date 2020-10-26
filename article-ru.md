@@ -2,12 +2,12 @@
 # jsqry - лучше, чем jq
 
 В своей [прошлой статье на Хабре](https://habr.com/ru/post/303624/) я писал про библиотеку 
-[Jsqry](https://github.com/jsqry/jsqry), которая предоставляет простой и удобный язык запросов DSL 
+[Jsqry](https://github.com/jsqry/jsqry), которая предоставляет простой и удобный язык запросов (DSL) 
 к объектам JSON. С тех пор прошло много времени и библиотека тоже получила свое развитие. 
 Отдельный повод для гордости - библиотека имеет 98% покрытие кода тестами.
 Однако в этой статье речь не совсем о ней.
 
-Думаю, многие из вас знакомы с инструментом [`jq`](https://codefaster.substack.com/p/mastering-jq-part-1-59c), который является практически стандартом де-факто для 
+Думаю, многие из вас знакомы с инструментом [`jq`](https://stedolan.github.io/jq/), который является практически стандартом де-факто для 
 работы с JSON в командной строке и скриптах. Я тоже являлся её активным пользователем.
 Но меня все время беспокоила неоправданная сложность и неинтуитивность синтаксиса запросов этой утилиты.
 И не меня одного, вот лишь несколько цитат с [hacker news](https://news.ycombinator.com/):
@@ -28,7 +28,7 @@
 для командной строки.
 Здесь есть один нюанс. Библиотека написана на JS и [её DSL](https://github.com/jsqry/jsqry.github.io/blob/master/README.md) 
 также опирается на JS. 
-Это значит что надо найти способ упаковать программу и какой-нибудь JS-runtime в самодостаточный исполняемый файл.
+Это значит, что надо найти способ упаковать программу и какой-нибудь JS-runtime в самодостаточный исполняемый файл.
 
 ## jsqry - GraalVM edition
 
@@ -65,7 +65,7 @@
 scripts.add(new String(Files.readAllBytes(Paths.get(jsFileResource.toURI()))));
 ```
 
-Под Граалем (то есть, будучи скомпилированным через [native-image](https://www.graalvm.org/reference-manual/native-image/)) падало с 
+под Граалем (то есть, будучи скомпилированным через [native-image](https://www.graalvm.org/reference-manual/native-image/)) падало с 
 ```
 java.nio.file.FileSystemNotFoundException: Provider "resource" not installed
 ```                                                                                                                      
@@ -301,7 +301,7 @@ $ /bin/bash /home/xonix/proj/jsqry-cli2/tests.sh
 В случае QuickJS некоторой мороки стоит считывание строки с stdin. Дело в том, что [минималистичная стандартная 
 библиотека](https://bellard.org/quickjs/quickjs.html#Standard-library), доступная в QuickJS, реализует только считывание
 байтов. Поэтому понадобился некоторый [ручной код](https://github.com/jsqry/jsqry-cli2/blob/master/jsqry-cli.js#L8)
-чтоб перегнать байтики UTF-8 в JS строку. Слава богу, его не пришлось изобретать, а удалось позаимствовать 
+чтоб перегнать байтики UTF-8 в JS-строку. К счастью, его не пришлось изобретать, а удалось позаимствовать 
 из другого проекта на QuickJS: [twardoch/svgop](https://github.com/twardoch/svgop).  
 
 ### Сборка утилиты
