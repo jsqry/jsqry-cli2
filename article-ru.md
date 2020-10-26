@@ -202,7 +202,8 @@ Usage: echo $JSON | jsqry 'query'
 
 ## Небольшое сравнение с `jq`
 
-https://gist.github.com/xonixx/d6066e83ec0773df248141440b18e8e4
+А [здесь](https://gist.github.com/xonixx/d6066e83ec0773df248141440b18e8e4) я подготовил небольшое практическое сравнение
+`jq` и `jsqry` на примерах.  
 
 ## Установка
 
@@ -234,7 +235,34 @@ echo \"jsqry \$(jsqry -v) installed successfully\"
 тяжеловесные для моего случая, а также самописную систему тестирования ([картинка про 14 стандартов](https://xkcd.ru/927/)), 
 остановился на решении [tush](https://github.com/adolfopa/tush), гениальном в своей простоте.   
 
-!!!TODO describe tush
+Тесты на `tush` представляют собой текстовый файл в таком синтаксисе
+
+```
+$ command --that --should --execute correctly
+| expected stdout output
+
+$ command --that --will --cause error
+@ expected stderr output
+? expected-exit-code
+```
+
+Причем `tush` разбирает только строки начинающиеся на `$`, `|`, `@` и `?` - все остальные могут быть любым текстом, например описанием соответствующих тестов.
+При запуске теста инструмент запускает все строки, начинающиеся на `$` и просто сравнивает реальный вывод с ожидаемым, используя обычный `diff`.
+В случае отличия тест заканчивается неудачей, а diff отличия выводится пользователю, пример:
+
+```
+$ /bin/bash /home/xonix/proj/jsqry-cli2/tests.sh
+--- tests.tush expected
++++ tests.tush actual
+@@ -1,5 +1,5 @@
+ $ jsqry -v
+-| 0.1.2
++| 0.1.1
+ 
+ $ jsqry -h
+ | jsqry ver. 0.1.1
+!!! TESTS FAILED !!!
+```
 
 Таким образом удалось покрыть тестами базовые сценарии работы с утилитой в виде одного файла
 https://github.com/jsqry/jsqry-cli2/blob/master/tests.tush.
