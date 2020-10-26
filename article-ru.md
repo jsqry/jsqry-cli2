@@ -282,7 +282,7 @@ https://github.com/jsqry/jsqry-cli2/blob/master/tests.tush.
 которые были подобраны на основе прекраснейшего StackOverflow [комментария](https://stackoverflow.com/a/28938235/104522). 
 Для примера привожу сравнение раскраски с `jq`. В моей версии строки более яркие, а null имеет красный цвет для пущей заметности.
 
-![]()
+![](https://github.com/jsqry/jsqry-cli2/raw/article/article-1.png)
 
 ## !!!TODO package.json && prepare-for-qjs.py
 ## !!!TODO read UTF8 stdin
