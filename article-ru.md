@@ -117,7 +117,8 @@ $ echo '[{"name":"John","age":30},{"name":"Alice","age":25},{"name":"Bob","age":
 #### использование в роли простого JSON pretty-printer
 
 ```
-$ echo '[{"name":"John","age":30},{"name":"Alice","age":25},{"name":"Bob","age":50}]' | jsqry
+$ echo '[{"name":"John","age":30},{"name":"Alice","age":25},{"name":"Bob","age":50}]' \
+ | jsqry
 [
   {
     "name": "John",
@@ -155,7 +156,8 @@ $ echo '[1,2,3,4,5]' | jsqry '[_>2] {_+100} s(-_) [-2:]'
 ```
 $ echo '["HTTP://EXAMPLE.COM/123", 
          "https://www.Google.com/search?q=test", 
-         "https://www.YouTube.com/watch?v=_OBlgSz8sSM"]' | jsqry '{ _.match(/:\/\/([^\/]+)\//)[1].toLowerCase() }'
+         "https://www.YouTube.com/watch?v=_OBlgSz8sSM"]' \
+ | jsqry '{ _.match(/:\/\/([^\/]+)\//)[1].toLowerCase() }'
 [
   "example.com",
   "www.google.com",
