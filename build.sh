@@ -2,7 +2,7 @@
 
 set -e
 
-QJS_VERSION="2020-09-06"
+QJS_VERSION="2020-11-08"
 
 mydir=$(
   cd "$(dirname $0)"
