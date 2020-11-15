@@ -46,11 +46,6 @@ fi
 
 cd ./build/
 
-#    -fno-json \
-#    -fno-module-loader \
-#    -fno-regexp \
-#    -fno-eval \
-
 echo
 echo "Compiling with $($QJS_HOME/qjsc | grep version)..."
 echo
@@ -58,6 +53,10 @@ echo
 if [[ -z "$TESTONLY" ]]; then
   echo 'Compiling release build...'
 
+  #    -fno-json \
+  #    -fno-module-loader \
+  #    -fno-regexp \
+  #    -fno-eval \
   $QJS_HOME/qjsc \
     -flto \
     -fno-date \

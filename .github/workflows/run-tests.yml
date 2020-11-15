@@ -1,4 +1,4 @@
-on: ["push", "pull_request"]
+on: [ "push", "pull_request" ]
 
 name: "Build and test"
 
@@ -12,45 +12,15 @@ jobs:
       - uses: actions/cache@v2
         id: cache-qjsc
         with:
-          path: quickjs
-          key: quickjs-2020-09-06
+          path: soft/quickjs-2020-09-06
+          key: quickjs-2
 
       - uses: actions/cache@v2
         id: cache-tush
         with:
-          path: tush
-          key: tush-1
+          path: soft/tush
+          key: tush-2
 
-      - name: "download & extract & compile qjsc"
-        if: steps.cache-qjsc.outputs.cache-hit != 'true'
+      - name: "build & run tests"
         run: |
-          QJS=quickjs-2020-09-06
-          wget https://bellard.org/quickjs/$QJS.tar.xz
-          tar xvf ./$QJS.tar.xz
-          mv $QJS quickjs
-
-          echo
-          echo "Compile"
-          echo
-
-          cd quickjs
-          make qjsc libquickjs.a
-
-      - name: "build jsqry"
-        run: |
-          mkdir build
-          cd build
-          ../quickjs/qjsc ../jsqry-cli.js -o jsqry
-
-      - name: "prepare test tool"
-        if: steps.cache-tush.outputs.cache-hit != 'true'
-        run: |
-          wget https://github.com/adolfopa/tush/archive/master.zip -O./tush.zip
-          unzip ./tush.zip
-          mv tush-master tush
-
-      - name: "run tests"
-        run: |
-          export PATH=$(cd ./tush/bin; pwd):$PATH
-          echo "PATH=$PATH"
-          ./tests.sh
+          TESTONLY=1 ./build.sh
