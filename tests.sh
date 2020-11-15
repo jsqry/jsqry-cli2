@@ -23,6 +23,7 @@ if [ ! -d "./soft/tush" ]; then
   cd "./soft"
   wget https://github.com/adolfopa/tush/archive/master.zip -O./tush.zip
   unzip ./tush.zip
+  rm ./tush.zip
   mv tush-master tush
   cd "$mydir"
 fi

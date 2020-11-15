@@ -35,7 +35,7 @@ if [ ! -f "$QJS_HOME/qjsc" ]; then
 
   cd "./$QJS"
 
-  make qjsc libquickjs.lto.a
+  make qjsc libquickjs.a libquickjs.lto.a
 fi
 
 cd "$mydir"
@@ -55,16 +55,24 @@ echo
 echo "Compiling with $($QJS_HOME/qjsc | grep version)..."
 echo
 
-$QJS_HOME/qjsc \
-  -flto \
-  -fno-date \
-  -fno-proxy \
-  -fno-promise \
-  -fno-map \
-  -fno-typedarray \
-  -fno-string-normalize \
-  -fno-bigint \
-  ../jsqry-cli.js -o jsqry
+if [[ -z "$TESTONLY" ]]; then
+  echo 'Compiling release build...'
+
+  $QJS_HOME/qjsc \
+    -flto \
+    -fno-date \
+    -fno-proxy \
+    -fno-promise \
+    -fno-map \
+    -fno-typedarray \
+    -fno-string-normalize \
+    -fno-bigint \
+    ../jsqry-cli.js -o jsqry
+else
+  echo 'Compiling test build...'
+
+  $QJS_HOME/qjsc ../jsqry-cli.js -o jsqry
+fi
 
 ls -lh jsqry
 
