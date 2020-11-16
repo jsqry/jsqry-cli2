@@ -66,11 +66,11 @@ if [[ -z "$TESTONLY" ]]; then
     -fno-typedarray \
     -fno-string-normalize \
     -fno-bigint \
-    ../jsqry-cli.js -o jsqry
+    -o jsqry ../jsqry-cli.js
 else
   echo 'Compiling test build...'
 
-  $QJS_HOME/qjsc ../jsqry-cli.js -o jsqry
+  $QJS_HOME/qjsc -o jsqry ../jsqry-cli.js
 fi
 
 ls -lh jsqry

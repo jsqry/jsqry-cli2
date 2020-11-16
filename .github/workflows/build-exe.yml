@@ -1,11 +1,12 @@
-on: [ "push", "pull_request" ]
+on:
+  workflow_dispatch:
 
-name: "Build and test"
+name: "Build executable"
 
 jobs:
   build:
     name: Build
-    runs-on: ubuntu-18.04
+    runs-on: macos-10.15
     steps:
       - uses: actions/checkout@v2
 
@@ -23,4 +24,4 @@ jobs:
 
       - name: "build & run tests"
         run: |
-          TESTONLY=1 ./build.sh
+          ./build.sh

@@ -174,14 +174,14 @@ $ echo '[{"name":"Bob"}, {"name": "Alice"}, {"name": {"value":"John"}}]' | jsqry
 
 $ echo '[]' | jsqry -u # no output
 
-$ echo '[]' | jsqry -u | wc -l
+$ echo '[]' | jsqry -u | wc -l | tr -d ' ' # https://apple.stackexchange.com/questions/370366/why-is-wc-c-printing-spaces-before-the-number
 | 0
 
 $ echo '[""]' | jsqry -u
 | 
 |
 
-$ echo '[""]' | jsqry -u | wc -l
+$ echo '[""]' | jsqry -u | wc -l | tr -d ' '
 | 1
 
 $ echo '[null,"null","\"test quotes"]' | jsqry -u
