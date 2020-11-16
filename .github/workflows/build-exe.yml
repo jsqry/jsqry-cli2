@@ -25,3 +25,8 @@ jobs:
       - name: "build & run tests"
         run: |
           ./build.sh
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: jsqry-macos
+          path: build/jsqry
