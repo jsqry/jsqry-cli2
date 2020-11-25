@@ -40,7 +40,8 @@ BEGIN {
 
     n = current_goal_name()
     for (i=2; i<=NF; i++) {
-        dependencies[n][i-2] = $i
+        _curr_dep = dependencies[n]
+        dependencies[n] = _curr_dep ? _curr_dep "\n" $i : $i
     }
 
     next
@@ -61,16 +62,23 @@ BEGIN {
 }
 
 END {
+    print "set -e\n"
+
     for (i = -1; i <= current_goal_idx; i++) {
         n = goals[i]
+        _is_goal = length(n) != 0
 
         body = trim(code[n])
 
         if (length(body) > 0) {
-            _is_goal = length(n) != 0
-
             if (_is_goal) {
-                print "\n" n "() {\nbash <<'EOF'"
+                print "\n" n "() {"
+
+                # TODO: topological sort
+                print "\n# dependencies"
+                print dependencies[n]
+
+                print "\nbash <<'EOF'"
             }
 
             print (_is_goal ? "  " : "") body

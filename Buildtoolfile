@@ -91,7 +91,7 @@
 @goal cleaned
 
 @goal built
-@depends_on built_for_prod
+@depends_on built_for_prod tested
 
 @goal tested
 @depends_on built_for_test tush_installed
