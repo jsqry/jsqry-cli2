@@ -50,19 +50,20 @@ BEGIN {
 "@reached_if" == $1 {
     check_goal_only()
 
-
     $1 = ""
     append_code_line("  if " trim($0) "; then")
-    append_code_line("    echo \"goal '" current_goal_name() "' is already satisfied\"")
+    append_code_line("    echo \"  goal '" current_goal_name() "' is already satisfied\"")
     append_code_line("    exit 0")
     append_code_line("  fi")
-
 
     next
 }
 
 END {
-    print "set -e\n"
+    print "set -e"
+    mydir = ENVIRON["PWD"]
+    print "export MYDIR='" mydir "'"
+    print "cd '" mydir "'"
 
     for (i = -1; i <= current_goal_idx; i++) {
         n = goals[i]
@@ -79,7 +80,8 @@ END {
 
             if (length(body) > 0) {
                 print "\nbash -e <<'EOF'"
-                print (_is_goal ? "  " : "") body
+                print "  echo \"executing goal '" n "' ...\""
+                print "  " body
                 print "EOF\n"
             }
 

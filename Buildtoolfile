@@ -19,7 +19,7 @@
   #    -fno-module-loader \
   #    -fno-regexp \
   #    -fno-eval \
-  $QJS_HOME/qjsc \
+  ../$QJS_HOME/qjsc \
     -flto \
     -fno-date \
     -fno-proxy \
@@ -38,7 +38,7 @@
 
   cd build
 
-  $QJS_HOME/qjsc -o jsqry ../jsqry-cli.js
+  ../$QJS_HOME/qjsc -o jsqry ../jsqry-cli.js
 
   ls -lh jsqry
 
@@ -72,6 +72,8 @@
   echo "Fetching QJS..."
   echo
 
+  cd "soft"
+
   QJS=quickjs-$QJS_VERSION
   wget https://bellard.org/quickjs/$QJS.tar.xz
   tar xvf ./$QJS.tar.xz
@@ -96,7 +98,7 @@
 
 @goal tested
 @depends_on built_for_test tush_installed
-  export PATH="build:$PATH:soft/tush/bin"
+  export PATH="$MYDIR/build:$PATH:$MYDIR/soft/tush/bin"
 
   tush-check tests.tush && echo 'TESTS PASSED' || (
     echo '!!! TESTS FAILED !!!'
