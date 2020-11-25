@@ -2,17 +2,29 @@
 
 BEGIN {
     current_goal_idx = -1
+    body_line_idx = 0
+}
+
+"@define" != $1 &&
+"@goal" != $1 &&
+"@depends_on" != $1 &&
+"@reached_if" != $1 {
+    append_code_line($0)
 }
 
 "@define" == $1 {
     if (!is_prelude()) {
         die("Only use @define in prelude")
     }
+
+    $1 = "export"
+    append_code_line($0)
+    next
 }
 
 "@goal" == $1 {
     goal_name = $2
-    if ($1 in goals_by_name) {
+    if (goal_name in goals_by_name) {
         die("Goal " goal_name " is already defined")
     }
     current_goal_idx++
@@ -22,11 +34,11 @@ BEGIN {
 
 "@depends_on" == $1 {
 
- }
+}
 
 "@reached_if" == $1 {
 
- }
+}
 
 END {
 
@@ -36,11 +48,18 @@ function is_prelude() {
     return current_goal_idx < 0
 }
 
-function current_goal() {
-    return goals[current_goal_idx]
+function current_goal_name() {
+    return current_goal_idx == -1 ? "prelude" : goals[current_goal_idx]
 }
 
 function die(msg) {
     print msg ":\n" ARGV[1] ":" NR ": " $0
     exit 1
+}
+
+function append_code_line(line,  n, current_code) {
+    n = current_goal_name()
+    print "Append line for '" n "': " line
+    current_code = code[n]
+    code[n] = current_code ? line : current_code "\n" line
 }
