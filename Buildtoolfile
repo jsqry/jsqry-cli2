@@ -1,5 +1,4 @@
 
-@prelude
 @define QJS_VERSION="2020-11-08"
 @define QJS_HOME="soft/quickjs-$QJS_VERSION"
 

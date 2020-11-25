@@ -1,2 +1,46 @@
-#!/usr/bin/env awk -f
+#!/usr/bin/awk -f
 
+BEGIN {
+    current_goal_idx = -1
+}
+
+"@define" == $1 {
+    if (!is_prelude()) {
+        die("Only use @define in prelude")
+    }
+}
+
+"@goal" == $1 {
+    goal_name = $2
+    if ($1 in goals_by_name) {
+        die("Goal " goal_name " is already defined")
+    }
+    current_goal_idx++
+    goals[current_goal_idx] = goal_name
+    goals_by_name[goal_name] = 1
+}
+
+"@depends_on" == $1 {
+
+ }
+
+"@reached_if" == $1 {
+
+ }
+
+END {
+
+}
+
+function is_prelude() {
+    return current_goal_idx < 0
+}
+
+function current_goal() {
+    return goals[current_goal_idx]
+}
+
+function die(msg) {
+    print msg ":\n" ARGV[1] ":" NR ": " $0
+    exit 1
+}
