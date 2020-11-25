@@ -2,6 +2,7 @@
 
 BEGIN {
     current_goal_idx = -1
+    goals[-1] = "" # prelude
 }
 
 "@define" != $1 &&
@@ -37,17 +38,41 @@ BEGIN {
 "@depends_on" == $1 {
     check_goal_only()
 
+    n = current_goal_name()
+    for (i=2; i<=NF; i++) {
+        dependencies[n][i-2] = $i
+    }
+
     next
 }
 
 "@reached_if" == $1 {
     check_goal_only()
 
+
+    $1 = ""
+    append_code_line("  if " $0 "; then")
+    append_code_line("  echo \"goal '" current_goal_name() "' is already satisfied\"")
+    append_code_line("  fi")
+
+
     next
 }
 
 END {
+    for (i = -1; i <= current_goal_idx; i++) {
+        n = goals[i]
 
+        if (length(n) != 0) {
+            print n "() {\n"
+        }
+
+        print code[n] "\n"
+
+        if (length(n) != 0) {
+            print "}\n"
+        }
+    }
 }
 
 function is_prelude() {
@@ -77,9 +102,9 @@ function die(msg) {
 
 function append_code_line(line,  n, current_code) {
     n = current_goal_name()
-    print "Append line for '" n "': " line
+    #print "Append line for '" n "': " line
     current_code = code[n]
-    code[n] = current_code ? line : current_code "\n" line
+    code[n] = current_code ? current_code "\n" line : line
 }
 
 function ltrim(s) { sub(/^[ \t\r\n]+/, "", s); return s }
