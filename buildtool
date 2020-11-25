@@ -15,40 +15,7 @@ BEGIN {
 "@depends_on" == $1 { handle_depends_on(); next }
 "@reached_if" == $1 { handle_reached_if(); next }
 
-END {
-    print "set -e"
-    mydir = ENVIRON["PWD"]
-    print "export MYDIR='" mydir "'"
-    print "cd '" mydir "'"
-
-    for (i = -1; i <= current_goal_idx; i++) {
-        n = goals[i]
-        _is_goal = length(n) != 0
-
-        body = trim(code[n])
-
-        if (_is_goal) {
-            print "\n" n "() {"
-
-            # TODO: topological sort
-            print "\n# dependencies"
-            print dependencies[n]
-
-            if (length(body) > 0) {
-                print "\nbash -e <<'EOF'"
-                print "  echo \"goal '" n "' ...\""
-                print "  " body
-                print "EOF\n"
-            }
-
-            print "}"
-        } else { # prelude
-            print body
-        }
-    }
-
-    print "default"
-}
+END { do_work() }
 
 function handle_define() {
     check_prelude_only()
@@ -57,7 +24,7 @@ function handle_define() {
     append_code_line($0)
 }
 
-function handle_goal(  goal_name) {
+function handle_goal(    goal_name) {
     goal_name = trim($2)
     if (length(goal_name) == 0) {
         die("Goal must have a name")
@@ -70,7 +37,7 @@ function handle_goal(  goal_name) {
     goals_by_name[goal_name] = 1
 }
 
-function handle_depends_on(  goal_name) {
+function handle_depends_on(    goal_name) {
     check_goal_only()
 
     goal_name = current_goal_name()
@@ -89,6 +56,40 @@ function handle_reached_if() {
     append_code_line("    echo \"  goal '" current_goal_name() "' is already satisfied\"")
     append_code_line("    exit 0")
     append_code_line("  fi")
+}
+
+function do_work(    i,mydir,goal_name,body) {
+    print "set -e"
+    mydir = ENVIRON["PWD"]
+    print "export MYDIR='" mydir "'"
+    print "cd '" mydir "'"
+
+    for (i = -1; i <= current_goal_idx; i++) {
+        goal_name = goals[i]
+
+        body = trim(code[goal_name])
+
+        if (length(goal_name) != 0) {
+            print "\n" goal_name "() {"
+
+            # TODO: topological sort
+            print "\n# dependencies"
+            print dependencies[goal_name]
+
+            if (length(body) > 0) {
+                print "\nbash -e <<'EOF'"
+                print "  echo \"goal '" goal_name "' ...\""
+                print "  " body
+                print "EOF\n"
+            }
+
+            print "}"
+        } else { # prelude
+            print body
+        }
+    }
+
+    print "default"
 }
 
 function is_prelude() {
@@ -116,7 +117,7 @@ function die(msg) {
     exit 1
 }
 
-function append_code_line(line,  n, current_code) {
+function append_code_line(line,    n, current_code) {
     n = current_goal_name()
     #print "Append line for '" n "': " line
     current_code = code[n]
