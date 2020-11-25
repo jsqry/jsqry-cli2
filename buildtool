@@ -51,8 +51,9 @@ BEGIN {
 
 
     $1 = ""
-    append_code_line("  if " $0 "; then")
-    append_code_line("  echo \"goal '" current_goal_name() "' is already satisfied\"")
+    append_code_line("  if " trim($0) "; then")
+    append_code_line("    echo \"goal '" current_goal_name() "' is already satisfied\"")
+    append_code_line("    return")
     append_code_line("  fi")
 
 
@@ -63,14 +64,20 @@ END {
     for (i = -1; i <= current_goal_idx; i++) {
         n = goals[i]
 
-        if (length(n) != 0) {
-            print n "() {\n"
-        }
+        body = trim(code[n])
 
-        print code[n] "\n"
+        if (length(body) > 0) {
+            _is_goal = length(n) != 0
 
-        if (length(n) != 0) {
-            print "}\n"
+            if (_is_goal) {
+                print "\n" n "() {\nbash <<'EOF'"
+            }
+
+            print (_is_goal ? "  " : "") body
+
+            if (_is_goal) {
+                print "EOF\n}"
+            }
         }
     }
 }
