@@ -89,6 +89,7 @@
 @depends_on tush_installed quickjs_installed
 
 @goal cleaned
+  rm "build/jsqry"
 
 @goal built
 @depends_on built_for_prod tested
@@ -101,3 +102,6 @@
     echo '!!! TESTS FAILED !!!'
     exit 1
   )
+
+@goal default
+@depends_on built

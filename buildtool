@@ -54,7 +54,7 @@ BEGIN {
     $1 = ""
     append_code_line("  if " trim($0) "; then")
     append_code_line("    echo \"goal '" current_goal_name() "' is already satisfied\"")
-    append_code_line("    return")
+    append_code_line("    exit 0")
     append_code_line("  fi")
 
 
@@ -70,24 +70,26 @@ END {
 
         body = trim(code[n])
 
-        if (length(body) > 0) {
-            if (_is_goal) {
-                print "\n" n "() {"
+        if (_is_goal) {
+            print "\n" n "() {"
 
-                # TODO: topological sort
-                print "\n# dependencies"
-                print dependencies[n]
+            # TODO: topological sort
+            print "\n# dependencies"
+            print dependencies[n]
 
-                print "\nbash <<'EOF'"
+            if (length(body) > 0) {
+                print "\nbash -e <<'EOF'"
+                print (_is_goal ? "  " : "") body
+                print "EOF\n"
             }
 
-            print (_is_goal ? "  " : "") body
-
-            if (_is_goal) {
-                print "EOF\n}"
-            }
+            print "}"
+        } else { # prelude
+            print body
         }
     }
+
+    print "default"
 }
 
 function is_prelude() {
