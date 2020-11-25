@@ -8,56 +8,12 @@ BEGIN {
 "@define" != $1 &&
 "@goal" != $1 &&
 "@depends_on" != $1 &&
-"@reached_if" != $1 {
-    append_code_line($0)
-    next
-}
+"@reached_if" != $1 { append_code_line($0); next }
 
-"@define" == $1 {
-    check_prelude_only()
-
-    $1 = "export"
-    append_code_line($0)
-    next
-}
-
-"@goal" == $1 {
-    goal_name = trim($2)
-    if (length(goal_name) == 0) {
-        die("Goal must have a name")
-    }
-    if (goal_name in goals_by_name) {
-        die("Goal " goal_name " is already defined")
-    }
-    current_goal_idx++
-    goals[current_goal_idx] = goal_name
-    goals_by_name[goal_name] = 1
-    next
-}
-
-"@depends_on" == $1 {
-    check_goal_only()
-
-    n = current_goal_name()
-    for (i=2; i<=NF; i++) {
-        _curr_dep = dependencies[n]
-        dependencies[n] = _curr_dep ? _curr_dep "\n" $i : $i
-    }
-
-    next
-}
-
-"@reached_if" == $1 {
-    check_goal_only()
-
-    $1 = ""
-    append_code_line("  if " trim($0) "; then")
-    append_code_line("    echo \"  goal '" current_goal_name() "' is already satisfied\"")
-    append_code_line("    exit 0")
-    append_code_line("  fi")
-
-    next
-}
+"@define" == $1     { handle_define();     next }
+"@goal" == $1       { handle_goal();       next }
+"@depends_on" == $1 { handle_depends_on(); next }
+"@reached_if" == $1 { handle_reached_if(); next }
 
 END {
     print "set -e"
@@ -80,7 +36,7 @@ END {
 
             if (length(body) > 0) {
                 print "\nbash -e <<'EOF'"
-                print "  echo \"executing goal '" n "' ...\""
+                print "  echo \"goal '" n "' ...\""
                 print "  " body
                 print "EOF\n"
             }
@@ -92,6 +48,47 @@ END {
     }
 
     print "default"
+}
+
+function handle_define() {
+    check_prelude_only()
+
+    $1 = "export"
+    append_code_line($0)
+}
+
+function handle_goal(  goal_name) {
+    goal_name = trim($2)
+    if (length(goal_name) == 0) {
+        die("Goal must have a name")
+    }
+    if (goal_name in goals_by_name) {
+        die("Goal " goal_name " is already defined")
+    }
+    current_goal_idx++
+    goals[current_goal_idx] = goal_name
+    goals_by_name[goal_name] = 1
+}
+
+function handle_depends_on(  goal_name) {
+    check_goal_only()
+
+    goal_name = current_goal_name()
+
+    for (i=2; i<=NF; i++) {
+        _curr_dep = dependencies[goal_name]
+        dependencies[goal_name] = _curr_dep ? _curr_dep "\n" $i : $i
+    }
+}
+
+function handle_reached_if() {
+    check_goal_only()
+
+    $1 = ""
+    append_code_line("  if " trim($0) "; then")
+    append_code_line("    echo \"  goal '" current_goal_name() "' is already satisfied\"")
+    append_code_line("    exit 0")
+    append_code_line("  fi")
 }
 
 function is_prelude() {

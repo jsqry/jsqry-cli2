@@ -5,13 +5,10 @@
 
 @goal prepared_for_build
 @depends_on quickjs_installed build_folder_created
-  echo
-  echo "Compiling with $($QJS_HOME/qjsc | grep version)..."
-  echo
 
 @goal built_for_prod
 @depends_on prepared_for_build
-  echo 'Compiling release build...'
+  echo "Compiling release build with $($QJS_HOME/qjsc | grep version)..."
 
   cd build
 
@@ -33,8 +30,9 @@
   ls -lh jsqry
 
 @goal built_for_test
+@reached_if [[ -f "build/jsqry" ]]
 @depends_on prepared_for_build
-  echo 'Compiling test build...'
+  echo "Compiling test build with $($QJS_HOME/qjsc | grep version)..."
 
   cd build
 
