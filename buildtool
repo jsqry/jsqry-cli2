@@ -2,7 +2,6 @@
 
 BEGIN {
     current_goal_idx = -1
-    body_line_idx = 0
 }
 
 "@define" != $1 &&
@@ -10,12 +9,11 @@ BEGIN {
 "@depends_on" != $1 &&
 "@reached_if" != $1 {
     append_code_line($0)
+    next
 }
 
 "@define" == $1 {
-    if (!is_prelude()) {
-        die("Only use @define in prelude")
-    }
+    check_prelude_only()
 
     $1 = "export"
     append_code_line($0)
@@ -23,21 +21,29 @@ BEGIN {
 }
 
 "@goal" == $1 {
-    goal_name = $2
+    goal_name = trim($2)
+    if (length(goal_name) == 0) {
+        die("Goal must have a name")
+    }
     if (goal_name in goals_by_name) {
         die("Goal " goal_name " is already defined")
     }
     current_goal_idx++
     goals[current_goal_idx] = goal_name
     goals_by_name[goal_name] = 1
+    next
 }
 
 "@depends_on" == $1 {
+    check_goal_only()
 
+    next
 }
 
 "@reached_if" == $1 {
+    check_goal_only()
 
+    next
 }
 
 END {
@@ -48,8 +54,20 @@ function is_prelude() {
     return current_goal_idx < 0
 }
 
+function check_prelude_only() {
+    if (!is_prelude()) {
+        die("Only use " $1 " in prelude")
+    }
+}
+
+function check_goal_only() {
+   if (is_prelude()) {
+       die("Only use " $1 " in goal")
+   }
+}
+
 function current_goal_name() {
-    return current_goal_idx == -1 ? "prelude" : goals[current_goal_idx]
+    return current_goal_idx == -1 ? "" : goals[current_goal_idx]
 }
 
 function die(msg) {
@@ -63,3 +81,7 @@ function append_code_line(line,  n, current_code) {
     current_code = code[n]
     code[n] = current_code ? line : current_code "\n" line
 }
+
+function ltrim(s) { sub(/^[ \t\r\n]+/, "", s); return s }
+function rtrim(s) { sub(/[ \t\r\n]+$/, "", s); return s }
+function trim(s) { return rtrim(ltrim(s)); }
