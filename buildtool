@@ -5,15 +5,11 @@ BEGIN {
     goals[-1] = "" # prelude
 }
 
-"@define" != $1 &&
-"@goal" != $1 &&
-"@depends_on" != $1 &&
-"@reached_if" != $1 { append_code_line($0); next }
-
-"@define" == $1     { handle_define();     next }
-"@goal" == $1       { handle_goal();       next }
-"@depends_on" == $1 { handle_depends_on(); next }
-"@reached_if" == $1 { handle_reached_if(); next }
+"@define" == $1     { handle_define();      next }
+"@goal" == $1       { handle_goal();        next }
+"@depends_on" == $1 { handle_depends_on();  next }
+"@reached_if" == $1 { handle_reached_if();  next }
+                    { append_code_line($0); next }
 
 END { do_work() }
 
