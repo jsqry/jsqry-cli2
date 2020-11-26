@@ -113,8 +113,12 @@ function do_work(    i,mydir,goal_name,body) {
     if (length(args_goals) == 0)
         issue_script_line("default")
     else {
-        for (i in args_goals)
-            issue_script_line(args_goals[i]) # TODO validate goal exists
+        for (i in args_goals) {
+            if (!(args_goals[i] in goals_by_name)) {
+                die_msg("Goal not found: " args_goals[i])
+            }
+            issue_script_line(args_goals[i])
+        }
     }
 
     if (args["-h"] || args["--help"]) {
@@ -154,7 +158,11 @@ function current_goal_name() {
 }
 
 function die(msg) {
-    print msg ":\n" ARGV[1] ":" NR ": " $0
+    die_msg(msg ":\n" ARGV[1] ":" NR ": " $0)
+}
+
+function die_msg(msg) {
+    print msg
     died = 1
     exit 1
 }
