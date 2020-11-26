@@ -108,8 +108,13 @@ function do_work(    i,mydir,goal_name,body) {
             issue_script_line(args_goals[i])
     }
 
-
-    if (args["-p"] || args["--print"])
+    if (args["-h"] || args["--help"]) {
+        print "Available goals:"
+        for (i in goals) {
+            if (i >= 0)
+                print "  " goals[i]
+        }
+    } else if (args["-p"] || args["--print"])
         print script
     else
         print script | "bash -e"
