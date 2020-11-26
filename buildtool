@@ -55,8 +55,6 @@ function handle_reached_if() {
 }
 
 function do_work(    i,mydir,goal_name,body) {
-    issue_script_line("set -e")
-
     mydir = ENVIRON["PWD"]
 
     issue_script_line("export MYDIR='" mydir "'")
@@ -88,7 +86,8 @@ function do_work(    i,mydir,goal_name,body) {
     }
 
     issue_script_line("default")
-    print script
+
+    print script | "bash -e"
 }
 
 function issue_script_line(line) {
