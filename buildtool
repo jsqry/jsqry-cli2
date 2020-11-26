@@ -6,14 +6,14 @@ BEGIN {
     prepare_args()
 }
 
-NR=1 && /^#!/       { next }
+NR==1 && /^#!/      { next }
 "@define" == $1     { handle_define();      next }
 "@goal" == $1       { handle_goal();        next }
-"@depends_on" == $1 { handle_depends_on();  next } # TODO prevent repeating
-"@reached_if" == $1 { handle_reached_if();  next } # TODO prevent repeating
+"@depends_on" == $1 { handle_depends_on();  next }
+"@reached_if" == $1 { handle_reached_if();  next }
                     { handle_code_line($0); next }
 
-END { do_work() }
+END { if (!died) do_work() }
 
 function prepare_args(    i,j,arg) {
     for (i in ARGV) {
@@ -60,11 +60,17 @@ function handle_depends_on(    goal_name,i,curr_dep) {
     }
 }
 
-function handle_reached_if() {
+function handle_reached_if(    goal_name) {
     check_goal_only()
 
+    goal_name = current_goal_name()
+
+    if (goal_name in reached_if) {
+        die("Multiple " $1 " not allowed for a goal")
+    }
+
     $1 = ""
-    reached_if[current_goal_name()] = trim($0)
+    reached_if[goal_name] = trim($0)
 }
 
 function do_work(    i,mydir,goal_name,body) {
@@ -149,6 +155,7 @@ function current_goal_name() {
 
 function die(msg) {
     print msg ":\n" ARGV[1] ":" NR ": " $0
+    died = 1
     exit 1
 }
 

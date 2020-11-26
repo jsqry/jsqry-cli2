@@ -13,3 +13,5 @@
 9.  [x] provide goals to run as argument
 10. [x] `-h` flag to show all goals
 11. [ ] per-goal documentation
+12. [ ] Make buildtool to use Buildtoolfile file by default 
+13. [ ] Agree on single standard way to run the scenario
