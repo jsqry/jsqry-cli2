@@ -31,7 +31,6 @@
   ls -lh jsqry
 
 @goal built_for_test
-@reached_if [[ -f "build/jsqry" ]]
 @depends_on prepared_for_build
   echo "Compiling test build with $($QJS_HOME/qjsc | grep version)..."
 
@@ -101,10 +100,13 @@
 @depends_on cleaned cleaned_soft
 
 @goal built
-@depends_on built_for_prod tested
+@depends_on built_for_prod tests_executed
 
 @goal tested
-@depends_on built_for_test tush_installed
+@depends_on built_for_test tests_executed
+
+@goal tests_executed
+@depends_on tush_installed
   export PATH="$MYDIR/build:$PATH:$MYDIR/soft/tush/bin"
 
   tush-check tests.tush && echo 'TESTS PASSED' || (
