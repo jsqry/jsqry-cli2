@@ -8,3 +8,5 @@
 4. [ ] Profiles (?) a-la maven
 5. [ ] Find a way to share functions
 6. [ ] Pre-check? Post-check?
+7. [ ] make @shell configurable
+8. [x] `-p` flag to print generated bash script 

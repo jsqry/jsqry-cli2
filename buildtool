@@ -3,8 +3,10 @@
 BEGIN {
     current_goal_idx = -1
     goals[-1] = "" # prelude
+    prepare_args()
 }
 
+NR=1 && /^#!/       { next }
 "@define" == $1     { handle_define();      next }
 "@goal" == $1       { handle_goal();        next }
 "@depends_on" == $1 { handle_depends_on();  next }
@@ -12,6 +14,16 @@ BEGIN {
                     { append_code_line($0); next }
 
 END { do_work() }
+
+function prepare_args(    i) {
+    for (i in ARGV) {
+        #print i " " ARGV[i];
+        if (i > 1) {
+            args[ARGV[i]] = 1
+            ARGV[i] = "" # https://unix.stackexchange.com/a/460375
+        }
+    }
+}
 
 function handle_define() {
     check_prelude_only()
@@ -87,7 +99,10 @@ function do_work(    i,mydir,goal_name,body) {
 
     issue_script_line("default")
 
-    print script | "bash -e"
+    if (args["-p"] || args["--print"])
+        print script
+    else
+        print script | "bash -e"
 }
 
 function issue_script_line(line) {
