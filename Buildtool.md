@@ -10,3 +10,5 @@
 6. [ ] Pre-check? Post-check?
 7. [ ] make @shell configurable
 8. [x] `-p` flag to print generated bash script 
+9. [x] provide goals to run as argument
+10 [ ] `-h` flag to show all goals

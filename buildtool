@@ -15,11 +15,15 @@ NR=1 && /^#!/       { next }
 
 END { do_work() }
 
-function prepare_args(    i) {
+function prepare_args(    i,j,arg) {
     for (i in ARGV) {
-        #print i " " ARGV[i];
+        arg = ARGV[i]
+        #print i " " arg;
         if (i > 1) {
-            args[ARGV[i]] = 1
+            if (substr(arg,0,1)=="-")
+                args[arg] = 1
+            else
+                args_goals[j++] = arg
             ARGV[i] = "" # https://unix.stackexchange.com/a/460375
         }
     }
@@ -97,7 +101,13 @@ function do_work(    i,mydir,goal_name,body) {
         }
     }
 
-    issue_script_line("default")
+    if (length(args_goals) == 0)
+        issue_script_line("default")
+    else {
+        for (i in args_goals)
+            issue_script_line(args_goals[i])
+    }
+
 
     if (args["-p"] || args["--print"])
         print script
