@@ -11,7 +11,7 @@ NR=1 && /^#!/       { next }
 "@goal" == $1       { handle_goal();        next }
 "@depends_on" == $1 { handle_depends_on();  next } # TODO prevent repeating
 "@reached_if" == $1 { handle_reached_if();  next } # TODO prevent repeating
-                    { append_code_line($0); next }
+                    { handle_code_line($0); next }
 
 END { do_work() }
 
@@ -33,7 +33,7 @@ function handle_define() {
     check_prelude_only()
 
     $1 = "export"
-    append_code_line($0)
+    handle_code_line($0)
 }
 
 function handle_goal(    goal_name) {
@@ -152,7 +152,7 @@ function die(msg) {
     exit 1
 }
 
-function append_code_line(line,    goal_name, current_code) {
+function handle_code_line(line,    goal_name, current_code) {
     goal_name = current_goal_name()
     #print "Append line for '" goal_name "': " line
     current_code = code[goal_name]
