@@ -1,14 +1,15 @@
 
-1. [x] Each goal execution should not create shared variables - this can introduce unwanted intent to rely on imperative execution model
-2. [x] prelude runs exactly 1 time
+1.  [x] Each goal execution should not create shared variables - this can introduce unwanted intent to rely on imperative execution model
+2.  [x] prelude runs exactly 1 time
     - goal is to initialize variables
     - use @define to export variable for goals
         - reuse export for MVP
-3. [ ] Goals topological sort
-4. [ ] Profiles (?) a-la maven
-5. [ ] Find a way to share functions
-6. [ ] Pre-check? Post-check?
-7. [ ] make @shell configurable
-8. [x] `-p` flag to print generated bash script 
-9. [x] provide goals to run as argument
+3.  [ ] Goals topological sort
+4.  [ ] Profiles (?) a-la maven
+5.  [ ] Find a way to share functions
+6.  [ ] Pre-check? Post-check?
+7.  [ ] make @shell configurable
+8.  [x] `-p` flag to print generated bash script 
+9.  [x] provide goals to run as argument
 10. [x] `-h` flag to show all goals
+11. [ ] per-goal documentation

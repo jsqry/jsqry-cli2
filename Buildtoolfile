@@ -90,7 +90,15 @@
 @depends_on tush_installed quickjs_installed
 
 @goal cleaned
+@reached_if [[ ! -f "build/jsqry" ]]
   rm "build/jsqry"
+
+@goal cleaned_soft
+@reached_if [[ ! -d "soft" ]]
+  rm -r "soft"
+
+@goal cleaned_all
+@depends_on cleaned cleaned_soft
 
 @goal built
 @depends_on built_for_prod tested
