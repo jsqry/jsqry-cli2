@@ -1,0 +1,116 @@
+#!./buildtool
+
+@define QJS_VERSION="2020-11-08"
+@define QJS_HOME="soft/quickjs-$QJS_VERSION"
+
+
+@goal prepared_for_build
+@depends_on quickjs_installed build_folder_created
+
+@goal built_for_prod
+@depends_on prepared_for_build
+  echo "Compiling release build with $($QJS_HOME/qjsc | grep version)..."
+
+  cd build
+
+  #    -fno-json \
+  #    -fno-module-loader \
+  #    -fno-regexp \
+  #    -fno-eval \
+  ../$QJS_HOME/qjsc \
+    -flto \
+    -fno-date \
+    -fno-proxy \
+    -fno-promise \
+    -fno-map \
+    -fno-typedarray \
+    -fno-string-normalize \
+    -fno-bigint \
+    -o jsqry ../jsqry-cli.js
+
+  ls -lh jsqry
+
+@goal built_for_test
+@reached_if [[ -f "build/jsqry" ]]
+@depends_on prepared_for_build
+  echo "Compiling test build with $($QJS_HOME/qjsc | grep version)..."
+
+  cd build
+
+  ../$QJS_HOME/qjsc -o jsqry ../jsqry-cli.js
+
+  ls -lh jsqry
+
+
+@goal build_folder_created
+@reached_if [[ -d "build" ]]
+  mkdir build
+
+@goal soft_folder_created
+@reached_if [[ -d "soft" ]]
+  mkdir soft
+
+@goal tush_installed
+@depends_on soft_folder_created
+@reached_if [[ -f "soft/tush/bin/tush-check" ]]
+  echo
+  echo "Fetching tush..."
+  echo
+
+  cd "soft"
+
+  wget https://github.com/adolfopa/tush/archive/master.zip -O./tush.zip
+  unzip ./tush.zip
+  rm ./tush.zip
+  mv tush-master tush
+
+@goal quickjs_installed
+@depends_on soft_folder_created
+@reached_if [[ -f "soft/quickjs-$QJS_VERSION/qjsc" ]]
+  echo
+  echo "Fetching QJS..."
+  echo
+
+  cd "soft"
+
+  QJS=quickjs-$QJS_VERSION
+  wget https://bellard.org/quickjs/$QJS.tar.xz
+  tar xvf ./$QJS.tar.xz
+  rm ./$QJS.tar.xz
+
+  echo
+  echo "Compile QJSC..."
+  echo
+
+  cd "$QJS"
+
+  make qjsc libquickjs.a libquickjs.lto.a
+
+@goal soft_installed
+@depends_on tush_installed quickjs_installed
+
+@goal cleaned
+@reached_if [[ ! -f "build/jsqry" ]]
+  rm "build/jsqry"
+
+@goal cleaned_soft
+@reached_if [[ ! -d "soft" ]]
+  rm -r "soft"
+
+@goal cleaned_all
+@depends_on cleaned cleaned_soft
+
+@goal built
+@depends_on built_for_prod tested
+
+@goal tested
+@depends_on built_for_test tush_installed
+  export PATH="$MYDIR/build:$PATH:$MYDIR/soft/tush/bin"
+
+  tush-check tests.tush && echo 'TESTS PASSED' || (
+    echo '!!! TESTS FAILED !!!'
+    exit 1
+  )
+
+@goal default
+@depends_on built

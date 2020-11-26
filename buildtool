@@ -1,0 +1,164 @@
+#!/usr/bin/awk -f
+
+BEGIN {
+    current_goal_idx = -1
+    goals[-1] = "" # prelude
+    prepare_args()
+}
+
+NR=1 && /^#!/       { next }
+"@define" == $1     { handle_define();      next }
+"@goal" == $1       { handle_goal();        next }
+"@depends_on" == $1 { handle_depends_on();  next }
+"@reached_if" == $1 { handle_reached_if();  next }
+                    { append_code_line($0); next }
+
+END { do_work() }
+
+function prepare_args(    i,j,arg) {
+    for (i in ARGV) {
+        arg = ARGV[i]
+        #print i " " arg;
+        if (i > 1) {
+            if (substr(arg,0,1)=="-")
+                args[arg] = 1
+            else
+                args_goals[j++] = arg
+            ARGV[i] = "" # https://unix.stackexchange.com/a/460375
+        }
+    }
+}
+
+function handle_define() {
+    check_prelude_only()
+
+    $1 = "export"
+    append_code_line($0)
+}
+
+function handle_goal(    goal_name) {
+    goal_name = trim($2)
+    if (length(goal_name) == 0) {
+        die("Goal must have a name")
+    }
+    if (goal_name in goals_by_name) {
+        die("Goal " goal_name " is already defined")
+    }
+    current_goal_idx++
+    goals[current_goal_idx] = goal_name
+    goals_by_name[goal_name] = 1
+}
+
+function handle_depends_on(    goal_name,i,curr_dep) {
+    check_goal_only()
+
+    goal_name = current_goal_name()
+
+    for (i=2; i<=NF; i++) {
+        curr_dep = dependencies[goal_name]
+        dependencies[goal_name] = curr_dep ? curr_dep "\n" $i : $i
+    }
+}
+
+function handle_reached_if() {
+    check_goal_only()
+
+    $1 = ""
+    reached_if[current_goal_name()] = trim($0)
+}
+
+function do_work(    i,mydir,goal_name,body) {
+    mydir = ENVIRON["PWD"]
+
+    issue_script_line("export MYDIR='" mydir "'")
+    issue_script_line("cd '" mydir "'")
+
+    for (i = -1; i <= current_goal_idx; i++) {
+        goal_name = goals[i]
+
+        body = trim(code[goal_name])
+
+        if (length(goal_name) != 0) {
+            issue_script_line("\n" goal_name "() {")
+
+            # TODO: topological sort
+            issue_script_line("\n# dependencies")
+            issue_script_line(dependencies[goal_name])
+
+            if (length(body) > 0) {
+                issue_script_line("\nbash -e <<'EOF'")
+                issue_script_line("  printf \"  goal '" goal_name "' \"")
+                issue_script_line("  if " (reached_if[goal_name] ? reached_if[goal_name] : "false") "; then")
+                issue_script_line("    echo \"[already satisfied].\"")
+                issue_script_line("    exit 0")
+                issue_script_line("  else")
+                issue_script_line("    echo \"...\"")
+                issue_script_line("  fi")
+                issue_script_line("  " body)
+                issue_script_line("EOF\n")
+            }
+
+            issue_script_line("}")
+        } else { # prelude
+            issue_script_line(body)
+        }
+    }
+
+    if (length(args_goals) == 0)
+        issue_script_line("default")
+    else {
+        for (i in args_goals)
+            issue_script_line(args_goals[i]) # TODO validate goal exists
+    }
+
+    if (args["-h"] || args["--help"]) {
+        print "Available goals:"
+        for (i in goals) {
+            if (i >= 0)
+                print "  " goals[i]
+        }
+    } else if (args["-p"] || args["--print"])
+        print script
+    else
+        print script | "bash -e"
+}
+
+function issue_script_line(line) {
+    script = script line "\n";
+}
+
+function is_prelude() {
+    return current_goal_idx < 0
+}
+
+function check_prelude_only() {
+    if (!is_prelude()) {
+        die("Only use " $1 " in prelude")
+    }
+}
+
+function check_goal_only() {
+   if (is_prelude()) {
+       die("Only use " $1 " in goal")
+   }
+}
+
+function current_goal_name() {
+    return current_goal_idx == -1 ? "" : goals[current_goal_idx]
+}
+
+function die(msg) {
+    print msg ":\n" ARGV[1] ":" NR ": " $0
+    exit 1
+}
+
+function append_code_line(line,    goal_name, current_code) {
+    goal_name = current_goal_name()
+    #print "Append line for '" goal_name "': " line
+    current_code = code[goal_name]
+    code[goal_name] = current_code ? current_code "\n" line : line
+}
+
+function ltrim(s) { sub(/^[ \t\r\n]+/, "", s); return s }
+function rtrim(s) { sub(/[ \t\r\n]+$/, "", s); return s }
+function trim(s) { return rtrim(ltrim(s)); }
