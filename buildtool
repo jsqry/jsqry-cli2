@@ -72,7 +72,7 @@ function handle_reached_if(    goal_name) {
     reached_if[goal_name] = trim($0)
 }
 
-function do_work(    i,j,mydir,goal_name,dep_cnt,body) {
+function do_work(    i,j,mydir,goal_name,dep_cnt,dep,body) {
     mydir = ENVIRON["PWD"]
 
     issue_script_line("export MYDIR='" mydir "'")
@@ -91,7 +91,10 @@ function do_work(    i,j,mydir,goal_name,dep_cnt,body) {
                 # TODO: topological sort
                 issue_script_line("\n# dependencies")
                 for (j=0; j < dep_cnt; j++) {
-                    issue_script_line(dependencies[goal_name, j])
+                    dep = dependencies[goal_name, j]
+                    if (!(dep in goals_by_name))
+                        die_msg("Goal '" goal_name "' has unknown dependency '" dep "'") # TODO find a way to provide line reference
+                    issue_script_line(dep)
                 }
             }
 

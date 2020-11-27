@@ -15,5 +15,5 @@
 11. [ ] per-goal documentation
 12. [ ] Make buildtool to use Buildtoolfile file by default 
 13. [ ] Agree on single standard way to run the scenario
-14. [ ] dependency validation - non-existent dep
+14. [x] dependency validation - non-existent dep
 15. [ ] dependency validation - cycle
