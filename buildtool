@@ -49,14 +49,16 @@ function handle_goal(    goal_name) {
     goals_by_name[goal_name] = 1
 }
 
-function handle_depends_on(    goal_name,i,curr_dep) {
+function handle_depends_on(    goal_name,i) {
     check_goal_only()
 
     goal_name = current_goal_name()
 
     for (i=2; i<=NF; i++) {
-        curr_dep = dependencies[goal_name]
-        dependencies[goal_name] = curr_dep ? curr_dep "\n" $i : $i
+        # curr_dep = dependencies[goal_name]
+        # dependencies[goal_name] = curr_dep ? curr_dep "\n" $i : $i
+        dependencies_cnt[goal_name]++
+        dependencies[goal_name, dependencies_cnt[goal_name]++] = $i
     }
 }
 
