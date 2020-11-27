@@ -15,15 +15,15 @@ NR==1 && /^#!/      { next }
 
 END { if (!died) do_work() }
 
-function prepare_args(    i,j,arg) {
+function prepare_args(    i,arg) {
     for (i in ARGV) {
         arg = ARGV[i]
         #print i " " arg;
         if (i > 1) {
-            if (substr(arg,0,1)=="-")
+            if (substr(arg,1,1)=="-")
                 args[arg] = 1
             else
-                args_goals[j++] = arg
+                args_goals[arg_goals_cnt++] = arg
             ARGV[i] = "" # https://unix.stackexchange.com/a/460375
         }
     }
@@ -117,15 +117,15 @@ function do_work(    i,j,mydir,goal_name,dep_cnt,dep,body) {
         }
     }
 
-    if (length(args_goals) == 0)
-        issue_script_line("default")
-    else {
+    if (arg_goals_cnt > 0) {
         for (i in args_goals) {
             if (!(args_goals[i] in goals_by_name)) {
                 die_msg("Goal not found: " args_goals[i])
             }
             issue_script_line(args_goals[i])
         }
+    } else {
+        issue_script_line("default")
     }
 
     if (args["-h"] || args["--help"]) {
@@ -136,8 +136,10 @@ function do_work(    i,j,mydir,goal_name,dep_cnt,dep,body) {
         }
     } else if (args["-p"] || args["--print"])
         print script
-    else
+    else {
         print script | "bash -e"
+        close("bash -e")
+    }
 }
 
 function issue_script_line(line) {
