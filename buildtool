@@ -55,9 +55,6 @@ function handle_depends_on(    goal_name,i) {
     goal_name = current_goal_name()
 
     for (i=2; i<=NF; i++) {
-        # curr_dep = dependencies[goal_name]
-        # dependencies[goal_name] = curr_dep ? curr_dep "\n" $i : $i
-        dependencies_cnt[goal_name]++
         dependencies[goal_name, dependencies_cnt[goal_name]++] = $i
     }
 }
@@ -75,7 +72,7 @@ function handle_reached_if(    goal_name) {
     reached_if[goal_name] = trim($0)
 }
 
-function do_work(    i,mydir,goal_name,body) {
+function do_work(    i,j,mydir,goal_name,dep_cnt,body) {
     mydir = ENVIRON["PWD"]
 
     issue_script_line("export MYDIR='" mydir "'")
@@ -89,9 +86,14 @@ function do_work(    i,mydir,goal_name,body) {
         if (length(goal_name) != 0) {
             issue_script_line("\n" goal_name "() {")
 
-            # TODO: topological sort
-            issue_script_line("\n# dependencies")
-            issue_script_line(dependencies[goal_name])
+            dep_cnt = dependencies_cnt[goal_name]
+            if (dep_cnt > 0) {
+                # TODO: topological sort
+                issue_script_line("\n# dependencies")
+                for (j=0; j < dep_cnt; j++) {
+                    issue_script_line(dependencies[goal_name, j])
+                }
+            }
 
             if (length(body) > 0) {
                 issue_script_line("\nbash -e <<'EOF'")
