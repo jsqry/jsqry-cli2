@@ -64,7 +64,7 @@
 
 @goal quickjs_installed
 @depends_on soft_folder_created
-@reached_if echo "QJS_VERSION=$QJS_VERSION" && [[ -f "soft/quickjs-$QJS_VERSION/qjsc" ]]
+@reached_if [[ -f "soft/quickjs-$QJS_VERSION/qjsc" ]]
   echo
   echo "Fetching QJS..."
   echo

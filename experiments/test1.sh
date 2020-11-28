@@ -47,7 +47,7 @@ EOF
 bash << 'EOF'
 
 echo "222"
-echo "$c"
+echo "c=$c"
 
 EOF
 
