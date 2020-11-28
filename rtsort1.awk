@@ -8,8 +8,8 @@ END {
     #topological_sort_add_connection("d","b")
     #topological_sort_add_connection("b","d")
 
-    topological_sort_perform("c", result, loop)
     topological_sort_perform("a", result, loop)
+    topological_sort_perform("c", result, loop)
 
     print "result:"
     for (i=1; i<=result[0]; i++) {
@@ -19,10 +19,15 @@ END {
 }
 
 function topological_sort_add_connection(from, to) {
-    slist[from, ++scnt[from]] = to # add $2 to successors of $1
+    # slist - list of successors by node
+    # scnt - count of successors by node
+    slist[from, ++scnt[from]] = to # add 'to' to successors of 'from'
 }
 
 function topological_sort_perform(node, result, loop,    i, s) {
+    if (visited[node] == 2)
+        return
+
     visited[node] = 1
 
     for (i = 1; i <= scnt[node]; i++) {
