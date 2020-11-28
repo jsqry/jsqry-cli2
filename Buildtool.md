@@ -1,9 +1,11 @@
 
 1.  [x] Each goal execution should not create shared variables - this can introduce unwanted intent to rely on imperative execution model
-2.  [x] prelude runs exactly 1 time
-    - goal is to initialize variables
-    - use @define to export variable for goals
-        - reuse export for MVP
+2.  prelude
+    - [ ] prelude runs exactly 1 time
+        - this is not possible due to topology sort should include reached_if thus should execute prelude multiple times
+    - [x] goal is to initialize variables
+    - [x] use @define to export variable for goals
+        - [x] reuse export for MVP
 3.  [x] Goals topological sort
 4.  [ ] Profiles (?) a-la maven
 5.  [ ] Find a way to share functions
@@ -20,4 +22,6 @@
 16. [x] @reached_if should run before dependencies
 17. [ ] show actual dependency loop path
 18. [x] mention each goal executed - now doesn't print if goal has empty body
-19. [ ] handle custom build file via `-f` 
+19. [ ] handle custom build file via `-f`
+20. [ ] `-v` flag to show version 
+21. [ ] `-d` flag to show resolved dependencies 
