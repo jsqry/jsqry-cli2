@@ -8,19 +8,23 @@
       slist[$1, ++scnt[$1]] = $2 # add $2 to successors of $1
     }
 
-END { for (node in pcnt) {
-          nodecnt++
-          if (pcnt[node] == 0) {
-              print "rtsort " node
-              rtsort(node)
-          }
-      }
-      if (pncnt != nodecnt)
-          print "error: input contains a cycle" pncnt " " nodecnt
-      printf("\n")
+END {
+     #for (node in pcnt) {
+     #     nodecnt++
+     #     if (pcnt[node] == 0) {
+     #         print "rtsort " node
+     #         rtsort(node)
+     #     }
+     # }
+     # if (pncnt != nodecnt)
+     #     print "error: input contains a cycle" pncnt " " nodecnt
+     # printf("\n")
+
+     rtsort("a")
     }
 
 function rtsort(node,     i, s) {
+    print "marking visited 1 " node
     visited[node] = 1
     for (i = 1; i <= scnt[node]; i++)
         if (visited[s = slist[node, i]] == 0)
