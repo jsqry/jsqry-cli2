@@ -18,3 +18,5 @@
 14. [x] dependency validation - non-existent dep
 15. [x] dependency validation - cycle
 16. [ ] @reached_if should run before dependencies
+17. [ ] show actual dependency loop path
+18. [x] mention each goal executed - now doesn't print if goal has empty body 
