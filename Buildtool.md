@@ -17,3 +17,4 @@
 13. [ ] Agree on single standard way to run the scenario
 14. [x] dependency validation - non-existent dep
 15. [ ] dependency validation - cycle
+16. [ ] @reached_if should run before dependencies

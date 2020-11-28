@@ -56,6 +56,7 @@ function handle_depends_on(    goal_name,i) {
 
     for (i=2; i<=NF; i++) {
         dependencies[goal_name, dependencies_cnt[goal_name]++] = $i
+        topological_sort_add_connection(goal_name, $i)
     }
 }
 
@@ -86,17 +87,17 @@ function do_work(    i,j,mydir,goal_name,dep_cnt,dep,body) {
         if (length(goal_name) != 0) {
             issue_script_line("\n" goal_name "() {")
 
-            dep_cnt = dependencies_cnt[goal_name]
-            if (dep_cnt > 0) {
-                # TODO: topological sort
-                issue_script_line("\n# dependencies")
-                for (j=0; j < dep_cnt; j++) {
-                    dep = dependencies[goal_name, j]
-                    if (!(dep in goals_by_name))
-                        die_msg("Goal '" goal_name "' has unknown dependency '" dep "'") # TODO find a way to provide line reference
-                    issue_script_line(dep)
-                }
-            }
+            #dep_cnt = dependencies_cnt[goal_name]
+            #if (dep_cnt > 0) {
+            #    # TODO: topological sort
+            #    issue_script_line("\n# dependencies")
+            #    for (j=0; j < dep_cnt; j++) {
+            #        dep = dependencies[goal_name, j]
+            #        if (!(dep in goals_by_name))
+            #            die_msg("Goal '" goal_name "' has unknown dependency '" dep "'") # TODO find a way to provide line reference
+            #        issue_script_line(dep)
+            #    }
+            #}
 
             if (length(body) > 0) {
                 issue_script_line("\nbash -e <<'EOF'")
@@ -181,6 +182,30 @@ function handle_code_line(line,    goal_name, current_code) {
     #print "Append line for '" goal_name "': " line
     current_code = code[goal_name]
     code[goal_name] = current_code ? current_code "\n" line : line
+}
+
+function topological_sort_add_connection(from, to) {
+    # slist - list of successors by node
+    # scnt - count of successors by node
+    slist[from, ++scnt[from]] = to # add 'to' to successors of 'from'
+}
+
+function topological_sort_perform(node, result, loop,    i, s) {
+    visited[node] = 1
+
+    for (i = 1; i <= scnt[node]; i++) {
+        if (visited[s = slist[node, i]] == 0)
+            topological_sort_perform(s, result, loop)
+        else if (visited[s] == 1) {
+            loop[0] = 1
+            loop[1] = s
+            loop[2] = node
+        }
+    }
+
+    visited[node] = 2
+
+    result[++result[0]] = node
 }
 
 function ltrim(s) { sub(/^[ \t\r\n]+/, "", s); return s }
