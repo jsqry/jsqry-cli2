@@ -87,17 +87,13 @@ function do_work(    i,j,mydir,goal_name,dep_cnt,dep,body) {
         if (length(goal_name) != 0) {
             issue_script_line("\n" goal_name "() {")
 
-            #dep_cnt = dependencies_cnt[goal_name]
-            #if (dep_cnt > 0) {
-            #    # TODO: topological sort
-            #    issue_script_line("\n# dependencies")
-            #    for (j=0; j < dep_cnt; j++) {
-            #        dep = dependencies[goal_name, j]
-            #        if (!(dep in goals_by_name))
-            #            die_msg("Goal '" goal_name "' has unknown dependency '" dep "'") # TODO find a way to provide line reference
-            #        issue_script_line(dep)
-            #    }
-            #}
+            # check valid dependencies
+            dep_cnt = dependencies_cnt[goal_name]
+            for (j=0; j < dep_cnt; j++) {
+                dep = dependencies[goal_name, j]
+                if (!(dep in goals_by_name))
+                    die_msg("Goal '" goal_name "' has unknown dependency '" dep "'") # TODO find a way to provide line reference
+            }
 
             if (length(body) > 0) {
                 issue_script_line("\nbash -e <<'EOF'")
@@ -110,6 +106,9 @@ function do_work(    i,j,mydir,goal_name,dep_cnt,dep,body) {
                 issue_script_line("  fi")
                 issue_script_line("  " body)
                 issue_script_line("EOF\n")
+            } else {
+                # in bash function can't have empty body - use nop
+                issue_script_line(":")
             }
 
             issue_script_line("}")
@@ -144,7 +143,6 @@ function issue_resolved_goals_to_run(    i, g, result, loop) {
             die_msg("Goal not found: " g) # TODO can we show line number here?
         }
         topological_sort_perform(g, result, loop)
-        #issue_script_line(g)
     }
 
     if (loop[0] == 1) {

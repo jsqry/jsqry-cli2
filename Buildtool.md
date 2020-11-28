@@ -4,7 +4,7 @@
     - goal is to initialize variables
     - use @define to export variable for goals
         - reuse export for MVP
-3.  [ ] Goals topological sort
+3.  [x] Goals topological sort
 4.  [ ] Profiles (?) a-la maven
 5.  [ ] Find a way to share functions
 6.  [ ] Pre-check? Post-check?
@@ -16,5 +16,5 @@
 12. [ ] Make buildtool to use Buildtoolfile file by default 
 13. [ ] Agree on single standard way to run the scenario
 14. [x] dependency validation - non-existent dep
-15. [ ] dependency validation - cycle
+15. [x] dependency validation - cycle
 16. [ ] @reached_if should run before dependencies
