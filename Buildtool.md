@@ -13,10 +13,11 @@
 9.  [x] provide goals to run as argument
 10. [x] `-h` flag to show all goals
 11. [ ] per-goal documentation
-12. [ ] Make buildtool to use Buildtoolfile file by default 
+12. [x] Make buildtool to use Buildtoolfile file by default 
 13. [x] Agree on single standard way to run the scenario
 14. [x] dependency validation - non-existent dep
 15. [x] dependency validation - cycle
 16. [ ] @reached_if should run before dependencies
 17. [ ] show actual dependency loop path
-18. [x] mention each goal executed - now doesn't print if goal has empty body 
+18. [x] mention each goal executed - now doesn't print if goal has empty body
+19. [ ] handle custom build file via `-f` 

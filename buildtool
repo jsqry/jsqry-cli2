@@ -58,7 +58,6 @@ function handle_depends_on(    goal_name,i) {
 
     for (i=2; i<=NF; i++) {
         dependencies[goal_name, dependencies_cnt[goal_name]++] = $i
-        topological_sort_add_connection(goal_name, $i)
     }
 }
 
@@ -75,7 +74,7 @@ function handle_reached_if(    goal_name) {
     reached_if[goal_name] = trim($0)
 }
 
-function do_work(    i,j,mydir,goal_name,dep_cnt,dep,body) {
+function do_work(    i,j,mydir,goal_name,dep_cnt,dep,reached_if_condition,body) {
     mydir = ENVIRON["PWD"]
 
     issue_script_line("export MYDIR='" mydir "'")
@@ -89,12 +88,18 @@ function do_work(    i,j,mydir,goal_name,dep_cnt,dep,body) {
         if (length(goal_name) != 0) {
             issue_script_line("\n" goal_name "() {")
 
+            reached_if_condition = reached_if[goal_name]
+
             # check valid dependencies
             dep_cnt = dependencies_cnt[goal_name]
             for (j=0; j < dep_cnt; j++) {
                 dep = dependencies[goal_name, j]
                 if (!(dep in goals_by_name))
                     die_msg("Goal '" goal_name "' has unknown dependency '" dep "'") # TODO find a way to provide line reference
+                if (!(reached_if_condition ? check_condition_reached(reached_if_condition) : false)) {
+                    print " [not reached] " goal_name " -> " dep
+                    topological_sort_add_connection(goal_name, dep)
+                } else print " [    reached] " goal_name " -> " dep
             }
 
             if (length(body) == 0) {
@@ -104,7 +109,7 @@ function do_work(    i,j,mydir,goal_name,dep_cnt,dep,body) {
 
             issue_script_line("\nbash -e <<'EOF'")
             issue_script_line("  printf \"  goal '" goal_name "' \"")
-            issue_script_line("  if " (reached_if[goal_name] ? reached_if[goal_name] : "false") "; then")
+            issue_script_line("  if " (reached_if_condition ? reached_if_condition : "false") "; then")
             issue_script_line("    echo \"[already satisfied].\"")
             issue_script_line("    exit 0")
             issue_script_line("  else")
@@ -190,6 +195,13 @@ function die_msg(msg) {
     print msg
     died = 1
     exit 1
+}
+
+function check_condition_reached(condition_str,    script, res) {
+    script = "bash -e <<'EOF'"
+    script = script "\n" condition_str
+    script = script "\nEOF"
+    return system(script)
 }
 
 function handle_code_line(line,    goal_name, current_code) {
