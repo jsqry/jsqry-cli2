@@ -1,4 +1,6 @@
-#!/usr/bin/awk -f
+#!/usr/bin/env bash
+
+exec awk -f - Buildtoolfile "$@" <<'AWKCODE'
 
 BEGIN {
     current_goal_idx = -1
@@ -227,3 +229,5 @@ function topological_sort_perform(node, result, loop,    i, s) {
 function ltrim(s) { sub(/^[ \t\r\n]+/, "", s); return s }
 function rtrim(s) { sub(/[ \t\r\n]+$/, "", s); return s }
 function trim(s) { return rtrim(ltrim(s)); }
+
+AWKCODE

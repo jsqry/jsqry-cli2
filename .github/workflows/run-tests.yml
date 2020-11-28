@@ -23,4 +23,4 @@ jobs:
 
       - name: "build & run tests"
         run: |
-          ./Buildtoolfile tested
+          ./buildtool tested
